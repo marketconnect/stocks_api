@@ -23,3 +23,9 @@ message ProductCard {
     uint64 sku   = 1;
     string name = 2;
 }
+
+message Stock {
+    uint64 sku = 1;
+    uint64 wh  = 2;
+    int64 qty  = 3;
+}

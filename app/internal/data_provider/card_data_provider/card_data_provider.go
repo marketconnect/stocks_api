@@ -8,7 +8,7 @@ import (
 
 const (
 	insertQuery = `INSERT INTO public.card (user_id, name, sku) VALUES ($1, $2, $3)`
-	selectQuery = `SELECT * FROM public.card WHERE user_id = $1`
+	selectQuery = `SELECT name, sku FROM public.card WHERE user_id = $1`
 )
 
 type cardStorage struct {
@@ -30,4 +30,33 @@ func (as *cardStorage) Save(ctx context.Context, userId uint64, cards []*pb.Prod
 		}
 	}
 	return nil
+}
+
+func (as *cardStorage) GetAll(ctx context.Context, userId uint64) ([]*pb.ProductCard, error) {
+	var result []*pb.ProductCard
+
+	rows, err := as.client.Query(ctx, selectQuery, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var card pb.ProductCard
+
+		// Scan the values from the row into the card struct
+		err := rows.Scan(&card.Name, &card.Sku)
+		if err != nil {
+			// Handle the error here
+			continue
+		}
+
+		result = append(result, &card)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
