@@ -262,6 +262,61 @@ func (x *ProductCard) GetName() string {
 	return ""
 }
 
+type GetFromToReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	From uint64 `protobuf:"varint,1,opt,name=from,proto3" json:"from,omitempty"`
+	To   uint64 `protobuf:"varint,2,opt,name=to,proto3" json:"to,omitempty"`
+}
+
+func (x *GetFromToReq) Reset() {
+	*x = GetFromToReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_message_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFromToReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFromToReq) ProtoMessage() {}
+
+func (x *GetFromToReq) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFromToReq.ProtoReflect.Descriptor instead.
+func (*GetFromToReq) Descriptor() ([]byte, []int) {
+	return file_message_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetFromToReq) GetFrom() uint64 {
+	if x != nil {
+		return x.From
+	}
+	return 0
+}
+
+func (x *GetFromToReq) GetTo() uint64 {
+	if x != nil {
+		return x.To
+	}
+	return 0
+}
+
 type Stock struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -275,7 +330,7 @@ type Stock struct {
 func (x *Stock) Reset() {
 	*x = Stock{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_message_proto_msgTypes[5]
+		mi := &file_message_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -288,7 +343,7 @@ func (x *Stock) String() string {
 func (*Stock) ProtoMessage() {}
 
 func (x *Stock) ProtoReflect() protoreflect.Message {
-	mi := &file_message_proto_msgTypes[5]
+	mi := &file_message_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -301,7 +356,7 @@ func (x *Stock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Stock.ProtoReflect.Descriptor instead.
 func (*Stock) Descriptor() ([]byte, []int) {
-	return file_message_proto_rawDescGZIP(), []int{5}
+	return file_message_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Stock) GetSku() uint64 {
@@ -325,6 +380,53 @@ func (x *Stock) GetQty() int64 {
 	return 0
 }
 
+type GetFromToResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Stocks []*Stock `protobuf:"bytes,1,rep,name=stocks,proto3" json:"stocks,omitempty"`
+}
+
+func (x *GetFromToResp) Reset() {
+	*x = GetFromToResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_message_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetFromToResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFromToResp) ProtoMessage() {}
+
+func (x *GetFromToResp) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFromToResp.ProtoReflect.Descriptor instead.
+func (*GetFromToResp) Descriptor() ([]byte, []int) {
+	return file_message_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetFromToResp) GetStocks() []*Stock {
+	if x != nil {
+		return x.Stocks
+	}
+	return nil
+}
+
 var File_message_proto protoreflect.FileDescriptor
 
 var file_message_proto_rawDesc = []byte{
@@ -345,12 +447,18 @@ var file_message_proto_rawDesc = []byte{
 	0x0b, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x43, 0x61, 0x72, 0x64, 0x12, 0x10, 0x0a, 0x03,
 	0x73, 0x6b, 0x75, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x03, 0x73, 0x6b, 0x75, 0x12, 0x12,
 	0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61,
-	0x6d, 0x65, 0x22, 0x3b, 0x0a, 0x05, 0x53, 0x74, 0x6f, 0x63, 0x6b, 0x12, 0x10, 0x0a, 0x03, 0x73,
-	0x6b, 0x75, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x03, 0x73, 0x6b, 0x75, 0x12, 0x0e, 0x0a,
-	0x02, 0x77, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x77, 0x68, 0x12, 0x10, 0x0a,
-	0x03, 0x71, 0x74, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x03, 0x71, 0x74, 0x79, 0x42,
-	0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x6d, 0x65, 0x22, 0x32, 0x0a, 0x0c, 0x47, 0x65, 0x74, 0x46, 0x72, 0x6f, 0x6d, 0x54, 0x6f, 0x52,
+	0x65, 0x71, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x72, 0x6f, 0x6d, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04,
+	0x52, 0x04, 0x66, 0x72, 0x6f, 0x6d, 0x12, 0x0e, 0x0a, 0x02, 0x74, 0x6f, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x04, 0x52, 0x02, 0x74, 0x6f, 0x22, 0x3b, 0x0a, 0x05, 0x53, 0x74, 0x6f, 0x63, 0x6b, 0x12,
+	0x10, 0x0a, 0x03, 0x73, 0x6b, 0x75, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x03, 0x73, 0x6b,
+	0x75, 0x12, 0x0e, 0x0a, 0x02, 0x77, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x77,
+	0x68, 0x12, 0x10, 0x0a, 0x03, 0x71, 0x74, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x03,
+	0x71, 0x74, 0x79, 0x22, 0x34, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x46, 0x72, 0x6f, 0x6d, 0x54, 0x6f,
+	0x52, 0x65, 0x73, 0x70, 0x12, 0x23, 0x0a, 0x06, 0x73, 0x74, 0x6f, 0x63, 0x6b, 0x73, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x53, 0x74, 0x6f, 0x63,
+	0x6b, 0x52, 0x06, 0x73, 0x74, 0x6f, 0x63, 0x6b, 0x73, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -365,22 +473,25 @@ func file_message_proto_rawDescGZIP() []byte {
 	return file_message_proto_rawDescData
 }
 
-var file_message_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_message_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_message_proto_goTypes = []interface{}{
 	(*Empty)(nil),               // 0: main.Empty
 	(*LoginRequest)(nil),        // 1: main.LoginRequest
 	(*LoginResponse)(nil),       // 2: main.LoginResponse
 	(*AddProductsCardsReq)(nil), // 3: main.AddProductsCardsReq
 	(*ProductCard)(nil),         // 4: main.ProductCard
-	(*Stock)(nil),               // 5: main.Stock
+	(*GetFromToReq)(nil),        // 5: main.GetFromToReq
+	(*Stock)(nil),               // 6: main.Stock
+	(*GetFromToResp)(nil),       // 7: main.GetFromToResp
 }
 var file_message_proto_depIdxs = []int32{
 	4, // 0: main.AddProductsCardsReq.productsCards:type_name -> main.ProductCard
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	6, // 1: main.GetFromToResp.stocks:type_name -> main.Stock
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_message_proto_init() }
@@ -450,7 +561,31 @@ func file_message_proto_init() {
 			}
 		}
 		file_message_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFromToReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_message_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Stock); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_message_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetFromToResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -468,7 +603,7 @@ func file_message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_message_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -16,3 +16,8 @@ service AuthService {
 service ProductCardService {
     rpc AddProductsCards(AddProductsCardsReq) returns (Empty);
 }
+
+
+service StockService {
+    rpc GetFromTo(GetFromToReq) returns (GetFromToResp);
+}

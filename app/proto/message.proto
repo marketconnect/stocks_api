@@ -21,11 +21,21 @@ message AddProductsCardsReq {
 
 message ProductCard {
     uint64 sku   = 1;
-    string name = 2;
+    string name  = 2;
 }
+
+message GetFromToReq {
+    uint64 from = 1;
+    uint64 to   = 2;
+}
+
 
 message Stock {
     uint64 sku = 1;
     uint64 wh  = 2;
     int64 qty  = 3;
+}
+
+message GetFromToResp {
+    repeated Stock stocks = 1;
 }
