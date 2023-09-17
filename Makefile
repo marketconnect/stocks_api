@@ -1,7 +1,7 @@
 git:
 	git add .
 	git commit -a -m "$m"
-	git push -u origin master
+	git push -u origin main
 
 gen:
 	protoc -I=app/proto --go_out=app/gen/ app/proto/*.proto
