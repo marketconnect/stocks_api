@@ -6,21 +6,20 @@ option go_package = "./proto";
 
 message Empty {}
 
-message User {
-    string email = 1;
+message LoginRequest {
+    string username = 1;
     string password = 2;
-    }
+}
 
-message TokenMessage {
+message LoginResponse {
     string token = 1;
 }
 
 message AddProductsCardsReq {
-    string token                       = 1;
-    repeated ProductCard productsCards = 2;
+    repeated ProductCard productsCards = 1;
 }
 
 message ProductCard {
-    uint64 id   = 1;
+    uint64 sku   = 1;
     string name = 2;
 }

@@ -5,7 +5,16 @@ import (
 	"fmt"
 	"net"
 	"stocks_api/app/internal/config"
+	"stocks_api/app/internal/data_provider/auth_data_provider"
+	"stocks_api/app/internal/domain/service/auth_interceptor"
+	auth_service "stocks_api/app/internal/domain/service/auth_service"
+	"stocks_api/app/pkg/client/postgresql"
+	my_jwt "stocks_api/app/pkg/jwt"
 	"stocks_api/app/pkg/logger"
+	"strconv"
+	"time"
+
+	pb "stocks_api/app/gen/proto"
 
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -19,15 +28,32 @@ type App struct {
 
 func NewApp(ctx context.Context, config *config.Config, logger logger.Logger) (App, error) {
 	logger.Info("Postgres initializing")
-	// pgConfig := postgresql.NewPgConfig(
-	// 	config.PostgreSQL.PostgreUsername, config.PostgreSQL.Password,
-	// 	config.PostgreSQL.Host, config.PostgreSQL.Port, config.PostgreSQL.Database,
-	// )
-	// pgClient, err := postgresql.NewClient(context.Background(), 5, time.Second*5, pgConfig)
-	// if err != nil {
-	// 	logger.Fatal(err)
-	// }
-	grpcServer := grpc.NewServer()
+	pgConfig := postgresql.NewPgConfig(
+		config.PostgreSQL.PostgreUsername, config.PostgreSQL.Password,
+		config.PostgreSQL.Host, config.PostgreSQL.Port, config.PostgreSQL.Database,
+	)
+	pgClient, err := postgresql.NewClient(context.Background(), 5, time.Second*5, pgConfig)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	tokenDuration, err := strconv.Atoi(config.Jwt.TokenDuration)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	jwtManager := my_jwt.NewJWTManager(config.Jwt.SecretKey, time.Duration((time.Minute * time.Duration(tokenDuration))))
+
+	// Data Providers
+	authDataProvider := auth_data_provider.NewAuthStorage(pgClient)
+
+	// Services
+	authService := auth_service.NewAuthService(authDataProvider, *jwtManager, logger)
+	interceptor := auth_interceptor.NewAuthInterceptor()
+
+	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(interceptor.Unary()))
+	pb.RegisterAuthServiceServer(grpcServer, authService)
+
 	return App{
 		cfg:        config,
 		grpcServer: grpcServer,

@@ -23,6 +23,10 @@ type Config struct {
 		Port            string `env:"PSQL_PORT" env-required:"true"`
 		Database        string `env:"PSQL_DATABASE" env-required:"true"`
 	}
+	Jwt struct {
+		SecretKey     string `env:"JWT_SECRET_KEY" env-required:"true"`
+		TokenDuration string `env:"JWT_TOKEN_DURATION" env-required:"true"`
+	}
 }
 
 // Singleton: Config should only ever be created once

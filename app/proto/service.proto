@@ -9,8 +9,8 @@ import "message.proto";
 
 
 service AuthService {
-    rpc RegisterUser(User) returns (TokenMessage);
-    rpc LoginUser(User) returns (TokenMessage);
+    // rpc RegisterUser(User) returns (TokenMessage);
+    rpc Login(LoginRequest) returns (LoginResponse);
 }
 
 service ProductCardService {
