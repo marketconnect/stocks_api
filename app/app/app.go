@@ -6,6 +6,7 @@ import (
 	"net"
 	"stocks_api/app/internal/config"
 	"stocks_api/app/internal/data_provider/auth_data_provider"
+	"stocks_api/app/internal/data_provider/permission_data_provider"
 	"stocks_api/app/internal/domain/service/auth_interceptor"
 	auth_service "stocks_api/app/internal/domain/service/auth_service"
 	"stocks_api/app/pkg/client/postgresql"
@@ -44,18 +45,23 @@ func NewApp(ctx context.Context, config *config.Config, logger logger.Logger) (A
 
 	jwtManager := my_jwt.NewJWTManager(config.Jwt.SecretKey, time.Duration((time.Minute * time.Duration(tokenDuration))))
 
+	// Token Manager
+	tokenManager := my_jwt.NewJWTManager(config.Jwt.SecretKey, time.Duration((time.Minute * time.Duration(tokenDuration))))
+
 	// Data Providers
 	authDataProvider := auth_data_provider.NewAuthStorage(pgClient)
+	permissionDataProvider := permission_data_provider.NewPermissionStorage(pgClient)
 
 	// Services
 	authService := auth_service.NewAuthService(authDataProvider, *jwtManager, logger)
-	interceptor := auth_interceptor.NewAuthInterceptor()
+	interceptor := auth_interceptor.NewAuthInterceptor(permissionDataProvider, tokenManager)
 
 	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(interceptor.Unary()))
 	pb.RegisterAuthServiceServer(grpcServer, authService)
 
 	return App{
 		cfg:        config,
+		logger:     logger,
 		grpcServer: grpcServer,
 	}, nil
 }

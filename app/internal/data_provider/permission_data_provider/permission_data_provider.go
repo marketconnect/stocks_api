@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	selectQuery = `SELECT id, method, qty, date_to, usert_id FROM public.user_permissions WHERE usert_id = $1`
+	selectQuery = `SELECT user_permissions.* FROM user_permissions JOIN mc_users ON user_permissions.usert_id = mc_users.id	WHERE mc_users.username = $1`
 )
 
 type permissionStorage struct {
@@ -19,8 +19,8 @@ func NewPermissionStorage(client client.PostgreSQLClient) *permissionStorage {
 	return &permissionStorage{client: client}
 }
 
-func (s *permissionStorage) GetUserPermissionsByUserID(ctx context.Context, userID int) ([]*entity.UserPermission, error) {
-	rows, err := s.client.Query(ctx, selectQuery, userID)
+func (s *permissionStorage) GetUserPermissionsByUserName(ctx context.Context, userName string) ([]*entity.UserPermission, error) {
+	rows, err := s.client.Query(ctx, selectQuery, userName)
 	if err != nil {
 		return nil, err
 	}

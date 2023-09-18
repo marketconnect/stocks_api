@@ -33,7 +33,7 @@ func NewAuthService(store UserStore, jwtManager my_jwt.JWTManager, logging logge
 	}
 }
 
-func (service *AuthService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb.TokenResponse, error) {
 	user, err := service.store.Find(ctx, req.GetUsername())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot find user: %v", err)
@@ -43,11 +43,36 @@ func (service *AuthService) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		return nil, status.Errorf(codes.NotFound, "incorrect username/password")
 	}
 
-	token, err := service.jwtManager.Generate(user.Username, user.Role)
+	token, err := service.jwtManager.Generate(user.Username)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
 
-	res := &pb.LoginResponse{Token: token}
+	res := &pb.TokenResponse{Token: token}
+	return res, nil
+}
+
+func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (*pb.TokenResponse, error) {
+	username := req.GetUsername()
+	pass := req.GetPassword()
+	if (username == "") || (pass == "") {
+		return nil, status.Errorf(codes.InvalidArgument, "username/password is empty")
+	}
+
+	newUser, err := entity.NewUser(username, pass)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "cannot create user: %v", err)
+	}
+	err = service.store.Save(ctx, newUser)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "cannot find user: %v", err)
+	}
+
+	token, err := service.jwtManager.Generate(newUser.Username)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "cannot generate access token")
+	}
+
+	res := &pb.TokenResponse{Token: token}
 	return res, nil
 }
