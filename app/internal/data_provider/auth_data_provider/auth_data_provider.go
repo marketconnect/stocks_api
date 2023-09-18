@@ -20,13 +20,13 @@ func NewAuthStorage(client client.PostgreSQLClient) *authStorage {
 	return &authStorage{client: client}
 }
 
-func (as *authStorage) Save(ctx context.Context, user *entity.User) error {
+func (as *authStorage) Save(ctx context.Context, user *entity.User) (uint64, error) {
 
 	row := as.client.QueryRow(ctx, saveQuery, user.Username, user.HashedPassword)
 	var userID uint64
 	err := row.Scan(&userID)
 
-	return err
+	return userID, err
 }
 
 func (as *authStorage) Find(ctx context.Context, username string) (*entity.User, error) {

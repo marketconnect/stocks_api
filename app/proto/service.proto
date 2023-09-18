@@ -13,6 +13,10 @@ service AuthService {
     rpc Login(AuthRequest) returns (TokenResponse);
 }
 
+service UserPermissionsService {
+    rpc GetPermissions(UserPermissionsRequest) returns (UserPermissionsResponse);
+}
+
 service ProductCardService {
     rpc AddProductsCards(AddProductsCardsReq) returns (Empty);
 }

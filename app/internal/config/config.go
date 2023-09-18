@@ -19,8 +19,8 @@ type Config struct {
 	PostgreSQL struct {
 		PostgreUsername string `env:"PSQL_USERNAME" env-required:"true"`
 		Password        string `env:"PSQL_PASSWORD" env-required:"true"`
-		Host            string `env:"PSQL_HOST" env-default:"localhost"`
 		Database        string `env:"PSQL_DATABASE" env-required:"true"`
+		Host            string `env:"PSQL_HOST" env-default:"localhost"`
 		Port            string `env:"PSQL_PORT" env-default:"5432"`
 	}
 	Jwt struct {

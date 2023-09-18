@@ -4,8 +4,6 @@ import (
 	"context"
 
 	"stocks_api/app/internal/domain/entity"
-	my_jwt "stocks_api/app/pkg/jwt"
-	"stocks_api/app/pkg/logger"
 
 	pb "stocks_api/app/gen/proto"
 
@@ -14,22 +12,24 @@ import (
 )
 
 type UserStore interface {
-	Save(ctx context.Context, user *entity.User) error
+	Save(ctx context.Context, user *entity.User) (uint64, error)
 	Find(ctx context.Context, username string) (*entity.User, error)
 }
 
+type TokenManager interface {
+	Generate(userId uint64) (string, error)
+}
+
 type AuthService struct {
-	store      UserStore
-	logging    logger.Logger
-	jwtManager my_jwt.JWTManager
+	store        UserStore
+	tokenManager TokenManager
 	pb.UnimplementedAuthServiceServer
 }
 
-func NewAuthService(store UserStore, jwtManager my_jwt.JWTManager, logging logger.Logger) *AuthService {
+func NewAuthService(store UserStore, tokenManager TokenManager) *AuthService {
 	return &AuthService{
-		store:      store,
-		jwtManager: jwtManager,
-		logging:    logging,
+		store:        store,
+		tokenManager: tokenManager,
 	}
 }
 
@@ -43,7 +43,7 @@ func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb
 		return nil, status.Errorf(codes.NotFound, "incorrect username/password")
 	}
 
-	token, err := service.jwtManager.Generate(user.Username)
+	token, err := service.tokenManager.Generate(user.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
@@ -63,12 +63,12 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot create user: %v", err)
 	}
-	err = service.store.Save(ctx, newUser)
+	userId, err := service.store.Save(ctx, newUser)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot find user: %v", err)
 	}
 
-	token, err := service.jwtManager.Generate(newUser.Username)
+	token, err := service.tokenManager.Generate(userId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}

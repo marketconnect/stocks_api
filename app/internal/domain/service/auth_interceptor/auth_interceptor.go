@@ -2,7 +2,7 @@ package auth_interceptor
 
 import (
 	"context"
-	"stocks_api/app/internal/domain/entity"
+	pb "stocks_api/app/gen/proto"
 	"time"
 
 	"google.golang.org/grpc"
@@ -12,11 +12,11 @@ import (
 )
 
 type PermissionsStore interface {
-	GetUserPermissionsByUserName(ctx context.Context, userName string) ([]*entity.UserPermission, error)
+	GetUserPermissionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserPermission, error)
 }
 
 type TokenManager interface {
-	Verify(accessToken string) (*string, error)
+	Verify(accessToken string) (*uint64, error)
 }
 
 type AuthInterceptor struct {
@@ -56,24 +56,23 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 	}
 
 	accessToken := values[0]
-	userName, err := interceptor.tokenManager.Verify(accessToken)
+	userId, err := interceptor.tokenManager.Verify(accessToken)
 	if err != nil {
 		return status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
 	}
 
-	// accessibleRoles, ok := interceptor.permissionsStore.GetUserPermissionsByUserName(ctx, userName)
-	userPermissions, err := interceptor.permissionsStore.GetUserPermissionsByUserName(ctx, *userName)
+	userPermissions, err := interceptor.permissionsStore.GetUserPermissionsByUserId(ctx, *userId)
 	if err != nil {
-		return status.Error(codes.PermissionDenied, "no permission to access this RPC")
+		return status.Error(codes.PermissionDenied, "no permission to access this RPC: "+method)
 	}
-	// Check if method accessible for the user
+
 	nowTime := time.Now()
 	for _, permission := range userPermissions {
-		if permission.Method == method && permission.DateTo.After(nowTime) {
+		if permission.Method == method && permission.DateTo.AsTime().After(nowTime) {
 			return nil
 		}
 	}
 
-	return status.Error(codes.PermissionDenied, "no permission to access this RPC")
+	return status.Error(codes.PermissionDenied, "no permission to access this RPC: "+method)
 
 }

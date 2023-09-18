@@ -13,26 +13,26 @@ type JWTManager struct {
 }
 type UserClaims struct {
 	jwt.StandardClaims
-	Username string `json:"username"`
+	UserId uint64 `json:"userId"`
 }
 
 func NewJWTManager(secretKey string, tokenDuration time.Duration) *JWTManager {
 	return &JWTManager{secretKey, tokenDuration}
 }
 
-func (manager *JWTManager) Generate(userName string) (string, error) {
+func (manager *JWTManager) Generate(userId uint64) (string, error) {
 	claims := UserClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(manager.tokenDuration).Unix(),
 		},
-		Username: userName,
+		UserId: userId,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(manager.secretKey))
 }
 
-func (manager *JWTManager) Verify(accessToken string) (*string, error) {
+func (manager *JWTManager) Verify(accessToken string) (*uint64, error) {
 	token, err := jwt.ParseWithClaims(
 		accessToken,
 		&UserClaims{},
@@ -55,5 +55,5 @@ func (manager *JWTManager) Verify(accessToken string) (*string, error) {
 		return nil, fmt.Errorf("invalid token claims")
 	}
 
-	return &claims.Username, nil
+	return &claims.UserId, nil
 }

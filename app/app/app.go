@@ -53,7 +53,7 @@ func NewApp(ctx context.Context, config *config.Config, logger logger.Logger) (A
 	permissionDataProvider := permission_data_provider.NewPermissionStorage(pgClient)
 
 	// Services
-	authService := auth_service.NewAuthService(authDataProvider, *jwtManager, logger)
+	authService := auth_service.NewAuthService(authDataProvider, jwtManager)
 	interceptor := auth_interceptor.NewAuthInterceptor(permissionDataProvider, tokenManager)
 
 	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(interceptor.Unary()))

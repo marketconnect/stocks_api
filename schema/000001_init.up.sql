@@ -8,8 +8,8 @@ CREATE TABLE public.user_permissions (
     method varchar(255) NOT NULL,
     qty integer,
     date_to timestamp NOT NULL,
-    usert_id integer REFERENCES public.mc_users(id),
-    CONSTRAINT unique_user_method UNIQUE (usert_id, method)
+    user_id integer REFERENCES public.mc_users(id),
+    CONSTRAINT unique_user_method UNIQUE (user_id, method)
 );
 CREATE TABLE public.card (
     id SERIAL PRIMARY KEY,
