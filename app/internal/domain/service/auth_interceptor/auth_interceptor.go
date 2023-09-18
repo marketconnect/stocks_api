@@ -45,6 +45,10 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 }
 
 func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string) error {
+	// Do not authorize for registration
+	if method == "/main.AuthService/Register" {
+		return nil
+	}
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return status.Errorf(codes.Unauthenticated, "metadata is not provided")
@@ -52,7 +56,7 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 
 	values := md["authorization"]
 	if len(values) == 0 {
-		return status.Errorf(codes.Unauthenticated, "authorization token is not provided")
+		return status.Errorf(codes.Unauthenticated, "authorization token is not provided"+method)
 	}
 
 	accessToken := values[0]
