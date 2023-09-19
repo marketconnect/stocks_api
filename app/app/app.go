@@ -54,7 +54,7 @@ func NewApp(ctx context.Context, config *config.Config, logger logger.Logger) (A
 	subscriptionDataProvider := subscription_data_provider.NewSubscriptionStorage(pgClient)
 
 	// Services
-	authService := auth_service.NewAuthService(authDataProvider, jwtManager)
+	authService := auth_service.NewAuthService(authDataProvider, subscriptionDataProvider, jwtManager)
 	subscriptionService := subscription_service.NewSubscriptionService(subscriptionDataProvider)
 	interceptor := auth_interceptor.NewAuthInterceptor(subscriptionDataProvider, tokenManager)
 

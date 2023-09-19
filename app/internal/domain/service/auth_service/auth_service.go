@@ -11,6 +11,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+type SubscriptionStore interface {
+	InsertSubscription(ctx context.Context, userId uint64, qty, days int32) error
+}
+
 type UserStore interface {
 	Save(ctx context.Context, user *entity.User) (uint64, error)
 	Find(ctx context.Context, username string) (*entity.User, error)
@@ -21,20 +25,22 @@ type TokenManager interface {
 }
 
 type AuthService struct {
-	store        UserStore
-	tokenManager TokenManager
+	userStore         UserStore
+	subscriptionStore SubscriptionStore
+	tokenManager      TokenManager
 	pb.UnimplementedAuthServiceServer
 }
 
-func NewAuthService(store UserStore, tokenManager TokenManager) *AuthService {
+func NewAuthService(userStore UserStore, subscriptionStore SubscriptionStore, tokenManager TokenManager) *AuthService {
 	return &AuthService{
-		store:        store,
-		tokenManager: tokenManager,
+		userStore:         userStore,
+		subscriptionStore: subscriptionStore,
+		tokenManager:      tokenManager,
 	}
 }
 
 func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb.TokenResponse, error) {
-	user, err := service.store.Find(ctx, req.GetUsername())
+	user, err := service.userStore.Find(ctx, req.GetUsername())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot find user: %v", err)
 	}
@@ -64,7 +70,7 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "cannot create user: %v", err)
 	}
-	userId, err := service.store.Save(ctx, newUser)
+	userId, err := service.userStore.Save(ctx, newUser)
 	if err != nil {
 		return nil, status.Errorf(codes.AlreadyExists, "cannot find user: %v", err)
 	}
@@ -72,6 +78,11 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 	token, err := service.tokenManager.Generate(userId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
+	}
+
+	err = service.subscriptionStore.InsertSubscription(ctx, userId, 10, 7)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "cannot generate subscription")
 	}
 
 	res := &pb.TokenResponse{Token: token}
