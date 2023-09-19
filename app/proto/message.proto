@@ -18,18 +18,17 @@ message TokenResponse {
     string token = 1;
 }
 
-message UserPermissionsRequest {
+message UserSubscriptionRequest {
     string username = 1;
 }
 
-message UserPermission {
-    string method                    = 1;
-    int32 qty                        = 2;
-    google.protobuf.Timestamp dateTo = 3;
+message UserSubscription {
+    int32 qty                        = 1;
+    google.protobuf.Timestamp dateTo = 2;
 }
 
-message UserPermissionsResponse {
-    repeated UserPermission permissions = 1;
+message UserSubscriptionResponse {
+    repeated UserSubscription subscription = 1;
 }
 
 message AddProductsCardsReq {

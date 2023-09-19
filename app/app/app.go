@@ -6,9 +6,10 @@ import (
 	"net"
 	"stocks_api/app/internal/config"
 	"stocks_api/app/internal/data_provider/auth_data_provider"
-	"stocks_api/app/internal/data_provider/permission_data_provider"
+	"stocks_api/app/internal/data_provider/subscription_data_provider"
 	"stocks_api/app/internal/domain/service/auth_interceptor"
 	auth_service "stocks_api/app/internal/domain/service/auth_service"
+	"stocks_api/app/internal/domain/service/subscription_service"
 	"stocks_api/app/pkg/client/postgresql"
 	my_jwt "stocks_api/app/pkg/jwt"
 	"stocks_api/app/pkg/logger"
@@ -50,14 +51,16 @@ func NewApp(ctx context.Context, config *config.Config, logger logger.Logger) (A
 
 	// Data Providers
 	authDataProvider := auth_data_provider.NewAuthStorage(pgClient)
-	permissionDataProvider := permission_data_provider.NewPermissionStorage(pgClient)
+	subscriptionDataProvider := subscription_data_provider.NewSubscriptionStorage(pgClient)
 
 	// Services
 	authService := auth_service.NewAuthService(authDataProvider, jwtManager)
-	interceptor := auth_interceptor.NewAuthInterceptor(permissionDataProvider, tokenManager)
+	subscriptionService := subscription_service.NewSubscriptionService(subscriptionDataProvider)
+	interceptor := auth_interceptor.NewAuthInterceptor(subscriptionDataProvider, tokenManager)
 
 	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(interceptor.Unary()))
 	pb.RegisterAuthServiceServer(grpcServer, authService)
+	pb.RegisterUserSubscriptionServiceServer(grpcServer, subscriptionService)
 
 	return App{
 		cfg:        config,

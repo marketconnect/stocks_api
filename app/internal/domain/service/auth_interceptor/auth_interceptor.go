@@ -2,8 +2,8 @@ package auth_interceptor
 
 import (
 	"context"
+	"fmt"
 	pb "stocks_api/app/gen/proto"
-	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type PermissionsStore interface {
-	GetUserPermissionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserPermission, error)
+type SubscriptionStore interface {
+	GetUserSubscriptionByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error)
 }
 
 type TokenManager interface {
@@ -20,12 +20,12 @@ type TokenManager interface {
 }
 
 type AuthInterceptor struct {
-	permissionsStore PermissionsStore
-	tokenManager     TokenManager
+	subscriptionStore SubscriptionStore
+	tokenManager      TokenManager
 }
 
-func NewAuthInterceptor(permissionsStore PermissionsStore, tokenManager TokenManager) *AuthInterceptor {
-	return &AuthInterceptor{permissionsStore: permissionsStore, tokenManager: tokenManager}
+func NewAuthInterceptor(subscriptionStore SubscriptionStore, tokenManager TokenManager) *AuthInterceptor {
+	return &AuthInterceptor{subscriptionStore: subscriptionStore, tokenManager: tokenManager}
 }
 
 func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
@@ -35,18 +35,18 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
+		fmt.Println(info.FullMethod)
 		err := interceptor.authorize(ctx, info.FullMethod)
 		if err != nil {
 			return nil, err
 		}
-
 		return handler(ctx, req)
 	}
 }
 
 func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string) error {
 	// Do not authorize for registration
-	if method == "/main.AuthService/Register" {
+	if method == "/main.AuthService/Register" || method == "/main.AuthService/Login" {
 		return nil
 	}
 	md, ok := metadata.FromIncomingContext(ctx)
@@ -65,16 +65,13 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 		return status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
 	}
 
-	userPermissions, err := interceptor.permissionsStore.GetUserPermissionsByUserId(ctx, *userId)
+	userPermissions, err := interceptor.subscriptionStore.GetUserSubscriptionByUserId(ctx, *userId)
 	if err != nil {
 		return status.Error(codes.PermissionDenied, "no permission to access this RPC: "+method)
 	}
 
-	nowTime := time.Now()
-	for _, permission := range userPermissions {
-		if permission.Method == method && permission.DateTo.AsTime().After(nowTime) {
-			return nil
-		}
+	if len(userPermissions) > 0 {
+		return nil
 	}
 
 	return status.Error(codes.PermissionDenied, "no permission to access this RPC: "+method)

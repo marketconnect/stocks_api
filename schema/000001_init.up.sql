@@ -3,13 +3,11 @@ CREATE TABLE public.mc_users (
     username varchar(255) UNIQUE NOT NULL,
     password varchar(255) NOT NULL
 );
-CREATE TABLE public.user_permissions (
+CREATE TABLE public.users_subscriptions (
     id SERIAL PRIMARY KEY,
-    method varchar(255) NOT NULL,
-    qty integer,
-    date_to timestamp NOT NULL,
-    user_id integer REFERENCES public.mc_users(id),
-    CONSTRAINT unique_user_method UNIQUE (user_id, method)
+    user_id integer REFERENCES public.mc_users (id) ON DELETE CASCADE,
+    end_date date,
+    quantity int
 );
 CREATE TABLE public.card (
     id SERIAL PRIMARY KEY,
@@ -25,3 +23,9 @@ CREATE TABLE public.stock (
     qty integer,
     created_at timestamp with time zone DEFAULT current_timestamp
 );
+-- GRANT CONNECT ON DATABASE * TO *;
+-- GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.mc_users TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.users_subscription TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.card TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.stock TO *;

@@ -53,6 +53,7 @@ func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb
 }
 
 func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (*pb.TokenResponse, error) {
+
 	username := req.GetUsername()
 	pass := req.GetPassword()
 	if (username == "") || (pass == "") {
@@ -61,11 +62,11 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 
 	newUser, err := entity.NewUser(username, pass)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "cannot create user: %v", err)
+		return nil, status.Errorf(codes.InvalidArgument, "cannot create user: %v", err)
 	}
 	userId, err := service.store.Save(ctx, newUser)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "cannot find user: %v", err)
+		return nil, status.Errorf(codes.AlreadyExists, "cannot find user: %v", err)
 	}
 
 	token, err := service.tokenManager.Generate(userId)
