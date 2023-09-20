@@ -6,6 +6,7 @@ CREATE TABLE public.mc_users (
 CREATE TABLE public.users_subscriptions (
     id SERIAL PRIMARY KEY,
     user_id integer REFERENCES public.mc_users (id) ON DELETE CASCADE,
+    price real,
     end_date date,
     quantity int
 );

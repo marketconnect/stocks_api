@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	selectByIdQuery   = `SELECT quantity, end_date FROM public.users_subscriptions WHERE user_id = $1 AND end_date > CURRENT_DATE`
-	selectByNameQuery = `SELECT users_subscriptions.quantity, users_subscriptions.end_date FROM users_subscriptions JOIN mc_users ON users_subscriptions.user_id = mc_users.id WHERE mc_users.username = $1 AND end_date > CURRENT_DATE`
-	insertQuery       = `INSERT INTO public.users_subscriptions (user_id, end_date, quantity) VALUES ($1, CURRENT_DATE + make_interval(days => $2), $3)`
+	selectByIdQuery   = `SELECT price, quantity, end_date FROM public.users_subscriptions WHERE user_id = $1 AND end_date > CURRENT_DATE`
+	selectByNameQuery = `SELECT users_subscriptions.price, users_subscriptions.quantity, users_subscriptions.end_date FROM users_subscriptions JOIN mc_users ON users_subscriptions.user_id = mc_users.id WHERE mc_users.username = $1 AND end_date > CURRENT_DATE`
+	insertQuery       = `INSERT INTO public.users_subscriptions (user_id, end_date, price, quantity) VALUES ($1, CURRENT_DATE + make_interval(days => $2), $3, $4)`
 )
 
 type subscriptionStorage struct {
@@ -25,7 +25,7 @@ func NewSubscriptionStorage(client client.PostgreSQLClient) *subscriptionStorage
 	return &subscriptionStorage{client: client}
 }
 
-func (s *subscriptionStorage) InsertSubscription(ctx context.Context, userId uint64, quantity, daysFromNow int32) error {
+func (s *subscriptionStorage) InsertSubscription(ctx context.Context, userId uint64, price float32, quantity, daysFromNow int32) error {
 
 	// Validate arguments
 	if userId == 0 {
@@ -38,8 +38,12 @@ func (s *subscriptionStorage) InsertSubscription(ctx context.Context, userId uin
 		return fmt.Errorf("daysFromNow must be greater than 0")
 	}
 
+	if price < 0 {
+		return fmt.Errorf("price must be greater than 0")
+	}
+
 	// Execute the query
-	_ = s.client.QueryRow(ctx, insertQuery, userId, daysFromNow, quantity)
+	_ = s.client.QueryRow(ctx, insertQuery, userId, daysFromNow, price, quantity)
 
 	return nil
 
@@ -57,7 +61,8 @@ func (s *subscriptionStorage) GetUserSubscriptionsByUserId(ctx context.Context, 
 	for rows.Next() {
 		var dateTo time.Time
 		var qty int32
-		err := rows.Scan(&qty, &dateTo)
+		var price float32
+		err := rows.Scan(&price, &qty, &dateTo)
 		if err != nil {
 			return nil, err
 		}
@@ -66,7 +71,8 @@ func (s *subscriptionStorage) GetUserSubscriptionsByUserId(ctx context.Context, 
 			Seconds: dateTo.Unix(),
 			Nanos:   int32(dateTo.Nanosecond()),
 		}
-		subscription := &pb.UserSubscription{Qty: qty, DateTo: &timestampDateTo}
+
+		subscription := &pb.UserSubscription{Price: price, Qty: qty, DateTo: &timestampDateTo}
 		subscriptions = append(subscriptions, subscription)
 	}
 
@@ -87,7 +93,8 @@ func (s *subscriptionStorage) GetUserSubscriptionsByUserName(ctx context.Context
 	for rows.Next() {
 		var dateTo time.Time
 		var qty int32
-		err := rows.Scan(&qty, &dateTo)
+		var price float32
+		err := rows.Scan(&price, &qty, &dateTo)
 		if err != nil {
 			return nil, err
 		}
@@ -96,7 +103,7 @@ func (s *subscriptionStorage) GetUserSubscriptionsByUserName(ctx context.Context
 			Seconds: dateTo.Unix(),
 			Nanos:   int32(dateTo.Nanosecond()),
 		}
-		subscription := &pb.UserSubscription{Qty: qty, DateTo: &timestampDateTo}
+		subscription := &pb.UserSubscription{Price: price, Qty: qty, DateTo: &timestampDateTo}
 		subscriptions = append(subscriptions, subscription)
 	}
 	if err := rows.Err(); err != nil {

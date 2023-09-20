@@ -12,7 +12,7 @@ import (
 )
 
 type SubscriptionStore interface {
-	InsertSubscription(ctx context.Context, userId uint64, qty, days int32) error
+	InsertSubscription(ctx context.Context, userId uint64, price float32, quantity, daysFromNow int32) error
 }
 
 type UserStore interface {
@@ -82,7 +82,7 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
 
-	err = service.subscriptionStore.InsertSubscription(ctx, userId, 10, 7)
+	err = service.subscriptionStore.InsertSubscription(ctx, userId, 0, 10, 7)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot generate subscription")
 	}
