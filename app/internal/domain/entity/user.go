@@ -7,9 +7,9 @@ import (
 )
 
 type User struct {
-	Id             uint64
-	Username       string
-	HashedPassword string
+	Id       uint64
+	Username string
+	Password string
 }
 
 func NewUser(username string, password string) (*User, error) {
@@ -19,14 +19,14 @@ func NewUser(username string, password string) (*User, error) {
 	}
 
 	user := &User{
-		Username:       username,
-		HashedPassword: string(hashedPassword),
+		Username: username,
+		Password: string(hashedPassword),
 	}
 
 	return user, nil
 }
 
 func (user *User) IsCorrectPassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	return err == nil
 }

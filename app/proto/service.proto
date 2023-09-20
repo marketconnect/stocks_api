@@ -13,8 +13,8 @@ service AuthService {
     rpc Login(AuthRequest) returns (TokenResponse);
 }
 
-service UserSubscriptionService {
-    rpc GetSubscription(UserSubscriptionRequest) returns (UserSubscriptionResponse);
+service UserSubscriptionsService {
+    rpc GetSubscriptions(UserSubscriptionsRequest) returns (UserSubscriptionsResponse);
 }
 
 service ProductCardService {

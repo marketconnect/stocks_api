@@ -60,7 +60,7 @@ func NewApp(ctx context.Context, config *config.Config, logger logger.Logger) (A
 
 	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(interceptor.Unary()))
 	pb.RegisterAuthServiceServer(grpcServer, authService)
-	pb.RegisterUserSubscriptionServiceServer(grpcServer, subscriptionService)
+	pb.RegisterUserSubscriptionsServiceServer(grpcServer, subscriptionService)
 
 	return App{
 		cfg:        config,

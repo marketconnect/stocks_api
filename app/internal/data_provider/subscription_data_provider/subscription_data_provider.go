@@ -3,14 +3,17 @@ package subscription_data_provider
 import (
 	"context"
 	"fmt"
+	"time"
 
 	pb "stocks_api/app/gen/proto"
 	client "stocks_api/app/pkg/client/postgresql"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
 	selectByIdQuery   = `SELECT quantity, end_date FROM public.users_subscriptions WHERE user_id = $1 AND end_date > CURRENT_DATE`
-	selectByNameQuery = `SELECT users_subscription.quantity, users_subscription.end_date FROM users_subscription JOIN mc_users ON users_subscription.user_id = mc_users.id WHERE mc_users.username = $1 AND end_date > CURRENT_DATE`
+	selectByNameQuery = `SELECT users_subscriptions.quantity, users_subscriptions.end_date FROM users_subscriptions JOIN mc_users ON users_subscriptions.user_id = mc_users.id WHERE mc_users.username = $1 AND end_date > CURRENT_DATE`
 	insertQuery       = `INSERT INTO public.users_subscriptions (user_id, end_date, quantity) VALUES ($1, CURRENT_DATE + make_interval(days => $2), $3)`
 )
 
@@ -42,7 +45,7 @@ func (s *subscriptionStorage) InsertSubscription(ctx context.Context, userId uin
 
 }
 
-func (s *subscriptionStorage) GetUserSubscriptionByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error) {
+func (s *subscriptionStorage) GetUserSubscriptionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error) {
 
 	rows, err := s.client.Query(ctx, selectByIdQuery, userId)
 	if err != nil {
@@ -52,11 +55,18 @@ func (s *subscriptionStorage) GetUserSubscriptionByUserId(ctx context.Context, u
 
 	var subscriptions []*pb.UserSubscription
 	for rows.Next() {
-		subscription := &pb.UserSubscription{}
-		err := rows.Scan(&subscription.Qty, &subscription.DateTo)
+		var dateTo time.Time
+		var qty int32
+		err := rows.Scan(&qty, &dateTo)
 		if err != nil {
 			return nil, err
 		}
+
+		timestampDateTo := timestamppb.Timestamp{
+			Seconds: dateTo.Unix(),
+			Nanos:   int32(dateTo.Nanosecond()),
+		}
+		subscription := &pb.UserSubscription{Qty: qty, DateTo: &timestampDateTo}
 		subscriptions = append(subscriptions, subscription)
 	}
 
@@ -66,7 +76,7 @@ func (s *subscriptionStorage) GetUserSubscriptionByUserId(ctx context.Context, u
 	return subscriptions, nil
 }
 
-func (s *subscriptionStorage) GetUserSubscriptionByUserName(ctx context.Context, username string) ([]*pb.UserSubscription, error) {
+func (s *subscriptionStorage) GetUserSubscriptionsByUserName(ctx context.Context, username string) ([]*pb.UserSubscription, error) {
 	rows, err := s.client.Query(ctx, selectByNameQuery, username)
 	if err != nil {
 		return nil, err
@@ -75,14 +85,21 @@ func (s *subscriptionStorage) GetUserSubscriptionByUserName(ctx context.Context,
 
 	var subscriptions []*pb.UserSubscription
 	for rows.Next() {
-		subscription := &pb.UserSubscription{}
-		err := rows.Scan(&subscription.Qty, &subscription.DateTo)
+		var dateTo time.Time
+		var qty int32
+		err := rows.Scan(&qty, &dateTo)
 		if err != nil {
 			return nil, err
 		}
+
+		timestampDateTo := timestamppb.Timestamp{
+			Seconds: dateTo.Unix(),
+			Nanos:   int32(dateTo.Nanosecond()),
+		}
+		subscription := &pb.UserSubscription{Qty: qty, DateTo: &timestampDateTo}
 		subscriptions = append(subscriptions, subscription)
 	}
-
+	fmt.Printf("%s %d", username, len(subscriptions))
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}

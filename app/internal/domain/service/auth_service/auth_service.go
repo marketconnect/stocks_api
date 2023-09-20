@@ -40,7 +40,9 @@ func NewAuthService(userStore UserStore, subscriptionStore SubscriptionStore, to
 }
 
 func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb.TokenResponse, error) {
-	user, err := service.userStore.Find(ctx, req.GetUsername())
+	userName := req.GetUsername()
+	user, err := service.userStore.Find(ctx, userName)
+
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot find user: %v", err)
 	}
@@ -72,7 +74,7 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 	}
 	userId, err := service.userStore.Save(ctx, newUser)
 	if err != nil {
-		return nil, status.Errorf(codes.AlreadyExists, "cannot find user: %v", err)
+		return nil, status.Errorf(codes.AlreadyExists, "cannot save user: %v", err)
 	}
 
 	token, err := service.tokenManager.Generate(userId)

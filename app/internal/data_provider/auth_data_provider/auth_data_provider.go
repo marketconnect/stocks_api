@@ -9,7 +9,7 @@ import (
 
 const (
 	saveQuery = `INSERT INTO public.mc_users (username, password) VALUES ($1, $2) RETURNING id`
-	findQuery = `SELECT * FROM public.mc_users WHERE username = $1`
+	findQuery = `SELECT id, password FROM public.mc_users WHERE username = $1`
 )
 
 type authStorage struct {
@@ -22,7 +22,7 @@ func NewAuthStorage(client client.PostgreSQLClient) *authStorage {
 
 func (as *authStorage) Save(ctx context.Context, user *entity.User) (uint64, error) {
 
-	row := as.client.QueryRow(ctx, saveQuery, user.Username, user.HashedPassword)
+	row := as.client.QueryRow(ctx, saveQuery, user.Username, user.Password)
 	var userID uint64
 	err := row.Scan(&userID)
 
@@ -30,8 +30,9 @@ func (as *authStorage) Save(ctx context.Context, user *entity.User) (uint64, err
 }
 
 func (as *authStorage) Find(ctx context.Context, username string) (*entity.User, error) {
-	var user entity.User
-	err := as.client.QueryRow(ctx, findQuery, username).Scan(&user)
-
+	var id uint64
+	var password string
+	err := as.client.QueryRow(ctx, findQuery, username).Scan(&id, &password)
+	user := entity.User{Id: id, Username: username, Password: password}
 	return &user, err
 }

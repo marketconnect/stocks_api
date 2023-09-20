@@ -18,7 +18,7 @@ message TokenResponse {
     string token = 1;
 }
 
-message UserSubscriptionRequest {
+message UserSubscriptionsRequest {
     string username = 1;
 }
 
@@ -27,8 +27,8 @@ message UserSubscription {
     google.protobuf.Timestamp dateTo = 2;
 }
 
-message UserSubscriptionResponse {
-    repeated UserSubscription subscription = 1;
+message UserSubscriptionsResponse {
+    repeated UserSubscription subscriptions = 1;
 }
 
 message AddProductsCardsReq {

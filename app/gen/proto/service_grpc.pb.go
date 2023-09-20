@@ -140,87 +140,87 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	Metadata: "service.proto",
 }
 
-// UserSubscriptionServiceClient is the client API for UserSubscriptionService service.
+// UserSubscriptionsServiceClient is the client API for UserSubscriptionsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserSubscriptionServiceClient interface {
-	GetSubscription(ctx context.Context, in *UserSubscriptionRequest, opts ...grpc.CallOption) (*UserSubscriptionResponse, error)
+type UserSubscriptionsServiceClient interface {
+	GetSubscriptions(ctx context.Context, in *UserSubscriptionsRequest, opts ...grpc.CallOption) (*UserSubscriptionsResponse, error)
 }
 
-type userSubscriptionServiceClient struct {
+type userSubscriptionsServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUserSubscriptionServiceClient(cc grpc.ClientConnInterface) UserSubscriptionServiceClient {
-	return &userSubscriptionServiceClient{cc}
+func NewUserSubscriptionsServiceClient(cc grpc.ClientConnInterface) UserSubscriptionsServiceClient {
+	return &userSubscriptionsServiceClient{cc}
 }
 
-func (c *userSubscriptionServiceClient) GetSubscription(ctx context.Context, in *UserSubscriptionRequest, opts ...grpc.CallOption) (*UserSubscriptionResponse, error) {
-	out := new(UserSubscriptionResponse)
-	err := c.cc.Invoke(ctx, "/main.UserSubscriptionService/GetSubscription", in, out, opts...)
+func (c *userSubscriptionsServiceClient) GetSubscriptions(ctx context.Context, in *UserSubscriptionsRequest, opts ...grpc.CallOption) (*UserSubscriptionsResponse, error) {
+	out := new(UserSubscriptionsResponse)
+	err := c.cc.Invoke(ctx, "/main.UserSubscriptionsService/GetSubscriptions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UserSubscriptionServiceServer is the server API for UserSubscriptionService service.
-// All implementations must embed UnimplementedUserSubscriptionServiceServer
+// UserSubscriptionsServiceServer is the server API for UserSubscriptionsService service.
+// All implementations must embed UnimplementedUserSubscriptionsServiceServer
 // for forward compatibility
-type UserSubscriptionServiceServer interface {
-	GetSubscription(context.Context, *UserSubscriptionRequest) (*UserSubscriptionResponse, error)
-	mustEmbedUnimplementedUserSubscriptionServiceServer()
+type UserSubscriptionsServiceServer interface {
+	GetSubscriptions(context.Context, *UserSubscriptionsRequest) (*UserSubscriptionsResponse, error)
+	mustEmbedUnimplementedUserSubscriptionsServiceServer()
 }
 
-// UnimplementedUserSubscriptionServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedUserSubscriptionServiceServer struct {
+// UnimplementedUserSubscriptionsServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedUserSubscriptionsServiceServer struct {
 }
 
-func (UnimplementedUserSubscriptionServiceServer) GetSubscription(context.Context, *UserSubscriptionRequest) (*UserSubscriptionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSubscription not implemented")
+func (UnimplementedUserSubscriptionsServiceServer) GetSubscriptions(context.Context, *UserSubscriptionsRequest) (*UserSubscriptionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubscriptions not implemented")
 }
-func (UnimplementedUserSubscriptionServiceServer) mustEmbedUnimplementedUserSubscriptionServiceServer() {
+func (UnimplementedUserSubscriptionsServiceServer) mustEmbedUnimplementedUserSubscriptionsServiceServer() {
 }
 
-// UnsafeUserSubscriptionServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserSubscriptionServiceServer will
+// UnsafeUserSubscriptionsServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserSubscriptionsServiceServer will
 // result in compilation errors.
-type UnsafeUserSubscriptionServiceServer interface {
-	mustEmbedUnimplementedUserSubscriptionServiceServer()
+type UnsafeUserSubscriptionsServiceServer interface {
+	mustEmbedUnimplementedUserSubscriptionsServiceServer()
 }
 
-func RegisterUserSubscriptionServiceServer(s grpc.ServiceRegistrar, srv UserSubscriptionServiceServer) {
-	s.RegisterService(&UserSubscriptionService_ServiceDesc, srv)
+func RegisterUserSubscriptionsServiceServer(s grpc.ServiceRegistrar, srv UserSubscriptionsServiceServer) {
+	s.RegisterService(&UserSubscriptionsService_ServiceDesc, srv)
 }
 
-func _UserSubscriptionService_GetSubscription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserSubscriptionRequest)
+func _UserSubscriptionsService_GetSubscriptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserSubscriptionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserSubscriptionServiceServer).GetSubscription(ctx, in)
+		return srv.(UserSubscriptionsServiceServer).GetSubscriptions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/main.UserSubscriptionService/GetSubscription",
+		FullMethod: "/main.UserSubscriptionsService/GetSubscriptions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserSubscriptionServiceServer).GetSubscription(ctx, req.(*UserSubscriptionRequest))
+		return srv.(UserSubscriptionsServiceServer).GetSubscriptions(ctx, req.(*UserSubscriptionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UserSubscriptionService_ServiceDesc is the grpc.ServiceDesc for UserSubscriptionService service.
+// UserSubscriptionsService_ServiceDesc is the grpc.ServiceDesc for UserSubscriptionsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UserSubscriptionService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "main.UserSubscriptionService",
-	HandlerType: (*UserSubscriptionServiceServer)(nil),
+var UserSubscriptionsService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "main.UserSubscriptionsService",
+	HandlerType: (*UserSubscriptionsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetSubscription",
-			Handler:    _UserSubscriptionService_GetSubscription_Handler,
+			MethodName: "GetSubscriptions",
+			Handler:    _UserSubscriptionsService_GetSubscriptions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -2,16 +2,17 @@ package subscription_service
 
 import (
 	"context"
+	"fmt"
 	pb "stocks_api/app/gen/proto"
 )
 
 type SubscriptionStore interface {
-	GetUserSubscriptionByUserName(ctx context.Context, username string) ([]*pb.UserSubscription, error)
+	GetUserSubscriptionsByUserName(ctx context.Context, username string) ([]*pb.UserSubscription, error)
 }
 
 type SubscriptionService struct {
 	store SubscriptionStore
-	pb.UnimplementedUserSubscriptionServiceServer
+	pb.UnimplementedUserSubscriptionsServiceServer
 }
 
 func NewSubscriptionService(store SubscriptionStore) *SubscriptionService {
@@ -20,12 +21,14 @@ func NewSubscriptionService(store SubscriptionStore) *SubscriptionService {
 	}
 }
 
-func (s *SubscriptionService) GetSubscription(ctx context.Context, req *pb.UserSubscriptionRequest) (*pb.UserSubscriptionResponse, error) {
-	subscriptions, err := s.store.GetUserSubscriptionByUserName(ctx, req.GetUsername())
+func (s *SubscriptionService) GetSubscriptions(ctx context.Context, req *pb.UserSubscriptionsRequest) (*pb.UserSubscriptionsResponse, error) {
+	username := req.GetUsername()
+	fmt.Println(username)
+	subscriptions, err := s.store.GetUserSubscriptionsByUserName(ctx, username)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.UserSubscriptionResponse{
-		Subscription: subscriptions,
+	return &pb.UserSubscriptionsResponse{
+		Subscriptions: subscriptions,
 	}, nil
 }
