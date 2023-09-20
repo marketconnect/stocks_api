@@ -24,6 +24,7 @@ func main() {
 	sugar := logger.Sugar()
 
 	sugar.Info("config initializing")
+
 	cfg := config.GetConfig()
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"stocks_api/app/internal/domain/entity"
+	"stocks_api/app/pkg/logger"
 
 	pb "stocks_api/app/gen/proto"
 
@@ -28,14 +29,16 @@ type AuthService struct {
 	userStore         UserStore
 	subscriptionStore SubscriptionStore
 	tokenManager      TokenManager
+	logger            logger.Logger
 	pb.UnimplementedAuthServiceServer
 }
 
-func NewAuthService(userStore UserStore, subscriptionStore SubscriptionStore, tokenManager TokenManager) *AuthService {
+func NewAuthService(userStore UserStore, subscriptionStore SubscriptionStore, tokenManager TokenManager, logger logger.Logger) *AuthService {
 	return &AuthService{
 		userStore:         userStore,
 		subscriptionStore: subscriptionStore,
 		tokenManager:      tokenManager,
+		logger:            logger,
 	}
 }
 
@@ -44,7 +47,8 @@ func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb
 	user, err := service.userStore.Find(ctx, userName)
 
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "cannot find user: %v", err)
+		service.logger.Error(err)
+		return nil, status.Errorf(codes.NotFound, "cannot find user: %v", err)
 	}
 
 	if user == nil || !user.IsCorrectPassword(req.GetPassword()) {
@@ -53,6 +57,7 @@ func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb
 
 	token, err := service.tokenManager.Generate(user.Id)
 	if err != nil {
+		service.logger.Error(err)
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
 
@@ -70,20 +75,24 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 
 	newUser, err := entity.NewUser(username, pass)
 	if err != nil {
+		service.logger.Error(err)
 		return nil, status.Errorf(codes.InvalidArgument, "cannot create user: %v", err)
 	}
 	userId, err := service.userStore.Save(ctx, newUser)
 	if err != nil {
+		service.logger.Error(err)
 		return nil, status.Errorf(codes.AlreadyExists, "cannot save user: %v", err)
 	}
 
 	token, err := service.tokenManager.Generate(userId)
 	if err != nil {
+		service.logger.Error(err)
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
 
 	err = service.subscriptionStore.InsertSubscription(ctx, userId, 0, 10, 7)
 	if err != nil {
+		service.logger.Error(err)
 		return nil, status.Errorf(codes.Internal, "cannot generate subscription")
 	}
 
