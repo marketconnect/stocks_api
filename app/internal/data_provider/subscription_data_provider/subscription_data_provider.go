@@ -99,7 +99,6 @@ func (s *subscriptionStorage) GetUserSubscriptionsByUserName(ctx context.Context
 		subscription := &pb.UserSubscription{Qty: qty, DateTo: &timestampDateTo}
 		subscriptions = append(subscriptions, subscription)
 	}
-	fmt.Printf("%s %d", username, len(subscriptions))
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
