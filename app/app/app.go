@@ -28,7 +28,7 @@ type App struct {
 	grpcServer *grpc.Server
 }
 
-func NewApp(ctx context.Context, config *config.Config, logger logger.Logger) (App, error) {
+func NewApp(config *config.Config, logger logger.Logger) (App, error) {
 	logger.Info("Postgres initializing")
 	pgConfig := postgresql.NewPgConfig(
 		config.PostgreSQL.PostgreUsername, config.PostgreSQL.Password,

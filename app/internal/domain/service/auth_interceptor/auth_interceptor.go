@@ -12,7 +12,7 @@ import (
 )
 
 type SubscriptionStore interface {
-	GetUserSubscriptionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error)
+	GetActiveUserSubscriptionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error)
 }
 
 type TokenManager interface {
@@ -46,7 +46,7 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 
 func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string) error {
 	// Do not authorize for registration
-	if method == "/main.AuthService/Register" || method == "/main.AuthService/Login" {
+	if method == "/main.AuthService/Register" || method == "/main.AuthService/Login" || method == "/main.UserSubscriptionsService/GetSubscriptions" {
 		return nil
 	}
 	md, ok := metadata.FromIncomingContext(ctx)
@@ -65,9 +65,9 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 		return status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
 	}
 
-	userPermissions, err := interceptor.subscriptionStore.GetUserSubscriptionsByUserId(ctx, *userId)
+	userPermissions, err := interceptor.subscriptionStore.GetActiveUserSubscriptionsByUserId(ctx, *userId)
 	if err != nil {
-		return status.Error(codes.PermissionDenied, "no permission to access this RPC: "+method)
+		return status.Error(codes.PermissionDenied, "error to  permission to access this RPC: "+err.Error()+method)
 	}
 
 	if len(userPermissions) > 0 {

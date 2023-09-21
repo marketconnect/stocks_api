@@ -29,7 +29,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	a, err := app.NewApp(ctx, cfg, sugar)
+	a, err := app.NewApp(cfg, sugar)
 	if err != nil {
 		sugar.Fatal(err)
 	}

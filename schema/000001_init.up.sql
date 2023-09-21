@@ -8,12 +8,15 @@ CREATE TABLE public.users_subscriptions (
     user_id integer REFERENCES public.mc_users (id) ON DELETE CASCADE,
     price real,
     end_date date,
-    quantity int
+    quantity int,
+    info varchar(255),
+    created_at timestamp with time zone DEFAULT current_timestamp
 );
 CREATE TABLE public.card (
     id SERIAL PRIMARY KEY,
     name varchar(255) NOT NULL DEFAULT '',
     user_id integer REFERENCES public.mc_users (id) ON DELETE CASCADE,
+    active boolean DEFAULT true,
     sku integer,
     CONSTRAINT unique_user_sku UNIQUE (user_id, sku)
 );
