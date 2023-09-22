@@ -28,8 +28,8 @@ CREATE TABLE public.stock (
     created_at timestamp with time zone DEFAULT current_timestamp
 );
 -- GRANT CONNECT ON DATABASE * TO *;
--- GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO *;
--- GRANT ALL PRIVILEGES ON TABLE public.mc_users TO *;
--- GRANT ALL PRIVILEGES ON TABLE public.users_subscriptions TO *;
--- GRANT ALL PRIVILEGES ON TABLE public.card TO *;
--- GRANT ALL PRIVILEGES ON TABLE public.stock TO *;
+-- GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO mc_user;
+-- GRANT ALL PRIVILEGES ON TABLE public.mc_users TO mc_user;
+-- GRANT ALL PRIVILEGES ON TABLE public.users_subscriptions TO mc_user;
+-- GRANT ALL PRIVILEGES ON TABLE public.card TO mc_user;
+-- GRANT ALL PRIVILEGES ON TABLE public.stock TO mc_user;
