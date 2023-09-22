@@ -15,11 +15,12 @@ message AuthRequest {
 }
 
 message TokenResponse {
-    string token = 1;
+    string token  = 1;
+    uint64 userId = 2;
 }
 
 message UserSubscriptionsRequest {
-    string username = 1;
+    uint64 ID = 1;
 }
 
 message UserSubscription {

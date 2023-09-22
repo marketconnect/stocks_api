@@ -13,7 +13,7 @@ import (
 
 const (
 	selectActiveByIdQuery = `SELECT quantity, price, end_date FROM public.users_subscriptions WHERE user_id = $1 AND end_date > CURRENT_DATE`
-	selectAllByNameQuery  = `SELECT users_subscriptions.price, users_subscriptions.quantity, users_subscriptions.end_date, users_subscriptions.info, users_subscriptions.created_at FROM users_subscriptions JOIN mc_users ON users_subscriptions.user_id = mc_users.id WHERE mc_users.username = $1`
+	selectAllByNameQuery  = `SELECT price, quantity, end_date, info, created_at FROM users_subscriptions WHERE user_id = $1`
 	insertQuery           = `INSERT INTO public.users_subscriptions (user_id, end_date, price, info, quantity) VALUES ($1, CURRENT_DATE + make_interval(days => $2), $3, $4, $5)`
 )
 
@@ -84,8 +84,8 @@ func (s *subscriptionStorage) GetActiveUserSubscriptionsByUserId(ctx context.Con
 	return subscriptions, nil
 }
 
-func (s *subscriptionStorage) GetAllUserSubscriptionsByUserName(ctx context.Context, username string) ([]*pb.UserSubscription, error) {
-	rows, err := s.client.Query(ctx, selectAllByNameQuery, username)
+func (s *subscriptionStorage) GetAllUserSubscriptionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error) {
+	rows, err := s.client.Query(ctx, selectAllByNameQuery, userId)
 	if err != nil {
 		return nil, err
 	}

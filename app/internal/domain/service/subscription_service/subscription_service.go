@@ -11,7 +11,7 @@ import (
 )
 
 type SubscriptionStore interface {
-	GetAllUserSubscriptionsByUserName(ctx context.Context, username string) ([]*pb.UserSubscription, error)
+	GetAllUserSubscriptionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error)
 }
 
 type SubscriptionService struct {
@@ -28,13 +28,13 @@ func NewSubscriptionService(store SubscriptionStore, logger logger.Logger) *Subs
 }
 
 func (s *SubscriptionService) GetSubscriptions(ctx context.Context, req *pb.UserSubscriptionsRequest) (*pb.UserSubscriptionsResponse, error) {
-	username := req.GetUsername()
-	fmt.Println("HERE " + username)
-	if username == "" {
-		return nil, status.Errorf(codes.InvalidArgument, "username is empty")
+	userId := req.GetID()
+	fmt.Printf("HERE %d", userId)
+	if userId == 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "userID is zero")
 	}
-	fmt.Println(username)
-	subscriptions, err := s.store.GetAllUserSubscriptionsByUserName(ctx, username)
+	fmt.Println(userId)
+	subscriptions, err := s.store.GetAllUserSubscriptionsByUserId(ctx, userId)
 	if err != nil {
 		s.logger.Error(err)
 		return nil, status.Errorf(codes.Internal, "cannot find subsciptions: %v", err)

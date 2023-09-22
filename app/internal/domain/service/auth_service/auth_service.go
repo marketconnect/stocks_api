@@ -61,7 +61,7 @@ func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
 
-	res := &pb.TokenResponse{Token: token}
+	res := &pb.TokenResponse{Token: token, UserId: user.Id}
 	return res, nil
 }
 
@@ -96,6 +96,6 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 		return nil, status.Errorf(codes.Internal, "cannot generate subscription")
 	}
 
-	res := &pb.TokenResponse{Token: token}
+	res := &pb.TokenResponse{Token: token, UserId: userId}
 	return res, nil
 }
