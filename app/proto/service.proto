@@ -18,7 +18,7 @@ service UserSubscriptionsService {
 }
 
 service ProductCardService {
-    rpc AddProductsCards(AddProductsCardsReq) returns (Empty);
+    rpc AddProductsCards(AddProductsCardsRequest) returns (Empty);
 }
 
 

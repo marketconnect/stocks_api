@@ -16,3 +16,7 @@ migrate_up:
 
 migrate_down:
 	migrate -path ./schema -database 'postgres://postgres:postgres@localhost:5432/mc_db?sslmode=disable' down
+
+# pg_dump -h localhost -U postgres -Fc mystats_db > mystats_db_23092023.sql
+# pg_restore -h localhost -U postgres -d mystats_db mystats_db_23092023.sql
+# pg_dump -h localhost -U postgres -t "public.api_stock" "mystats_db" | psql -U postgres -d "public.stock" "new_db"

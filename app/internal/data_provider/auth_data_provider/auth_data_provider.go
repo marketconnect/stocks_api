@@ -2,6 +2,7 @@ package auth_data_provider
 
 import (
 	"context"
+	"fmt"
 
 	"stocks_api/app/internal/domain/entity"
 	client "stocks_api/app/pkg/client/postgresql"
@@ -26,7 +27,7 @@ func (as *authStorage) Save(ctx context.Context, user *entity.User) (uint64, err
 	var userID uint64
 	err := row.Scan(&userID)
 
-	return userID, err
+	return userID, fmt.Errorf("cannot save user: %d %w", user.Id, err)
 }
 
 func (as *authStorage) Find(ctx context.Context, username string) (*entity.User, error) {

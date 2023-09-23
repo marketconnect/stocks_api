@@ -35,8 +35,9 @@ message UserSubscriptionsResponse {
     repeated UserSubscription subscriptions = 1;
 }
 
-message AddProductsCardsReq {
-    repeated ProductCard productsCards = 1;
+message AddProductsCardsRequest {
+    uint64 ID = 1;
+    repeated ProductCard productsCards = 2;
 }
 
 
@@ -46,8 +47,9 @@ message ProductCard {
 }
 
 message GetFromToReq {
-    uint64 from = 1;
-    uint64 to   = 2;
+    uint64 from          = 1;
+    uint64 to            = 2;
+    repeated uint64 skus = 3;
 }
 
 

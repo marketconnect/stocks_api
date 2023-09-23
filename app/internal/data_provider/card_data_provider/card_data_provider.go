@@ -19,7 +19,7 @@ func NewCardStorage(client client.PostgreSQLClient) *cardStorage {
 	return &cardStorage{client: client}
 }
 
-func (as *cardStorage) Save(ctx context.Context, userId uint64, cards []*pb.ProductCard) error {
+func (as *cardStorage) SaveAll(ctx context.Context, userId uint64, cards []*pb.ProductCard) error {
 	for _, card := range cards {
 		name := card.GetName()
 		sku := card.GetSku()
