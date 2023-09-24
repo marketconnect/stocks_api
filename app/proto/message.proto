@@ -15,8 +15,9 @@ message AuthRequest {
 }
 
 message TokenResponse {
-    string token  = 1;
-    uint64 userId = 2;
+    string token    = 1;
+    uint64 userId   = 2;
+    int64 expiredAt = 3;
 }
 
 message UserSubscriptionsRequest {

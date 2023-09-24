@@ -2,6 +2,7 @@ package auth_service
 
 import (
 	"context"
+	"time"
 
 	"stocks_api/app/internal/domain/entity"
 	"stocks_api/app/pkg/logger"
@@ -27,17 +28,19 @@ type TokenManager interface {
 
 type AuthService struct {
 	userStore         UserStore
+	tokenDuration     int
 	subscriptionStore SubscriptionStore
 	tokenManager      TokenManager
 	logger            logger.Logger
 	pb.UnimplementedAuthServiceServer
 }
 
-func NewAuthService(userStore UserStore, subscriptionStore SubscriptionStore, tokenManager TokenManager, logger logger.Logger) *AuthService {
+func NewAuthService(userStore UserStore, subscriptionStore SubscriptionStore, tokenManager TokenManager, tokenDuration int, logger logger.Logger) *AuthService {
 	return &AuthService{
 		userStore:         userStore,
 		subscriptionStore: subscriptionStore,
 		tokenManager:      tokenManager,
+		tokenDuration:     tokenDuration,
 		logger:            logger,
 	}
 }
@@ -60,8 +63,9 @@ func (service *AuthService) Login(ctx context.Context, req *pb.AuthRequest) (*pb
 		service.logger.Error(err)
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
+	apochNow := time.Now().Unix()
 
-	res := &pb.TokenResponse{Token: token, UserId: user.Id}
+	res := &pb.TokenResponse{Token: token, UserId: user.Id, ExpiredAt: apochNow + int64(service.tokenDuration)}
 	return res, nil
 }
 
@@ -96,6 +100,7 @@ func (service *AuthService) Register(ctx context.Context, req *pb.AuthRequest) (
 		return nil, status.Errorf(codes.Internal, "cannot generate subscription")
 	}
 
-	res := &pb.TokenResponse{Token: token, UserId: userId}
+	apocheNow := time.Now().Unix()
+	res := &pb.TokenResponse{Token: token, UserId: userId, ExpiredAt: apocheNow + int64(service.tokenDuration)}
 	return res, nil
 }
