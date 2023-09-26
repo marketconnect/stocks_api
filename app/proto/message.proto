@@ -47,6 +47,10 @@ message ProductCard {
     string name  = 2;
 }
 
+message AddProductsCardsResponse {
+    int32 qty = 1;
+}
+
 message GetFromToReq {
     uint64 from          = 1;
     uint64 to            = 2;

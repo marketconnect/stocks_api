@@ -54,6 +54,7 @@ func (s *subscriptionStorage) InsertSubscription(ctx context.Context, userId uin
 }
 
 func (s *subscriptionStorage) GetActiveUserSubscriptionsByUserId(ctx context.Context, userId uint64) ([]*pb.UserSubscription, error) {
+
 	fmt.Println(userId)
 	rows, err := s.client.Query(ctx, selectActiveByIdQuery, userId)
 	if err != nil {
@@ -66,7 +67,7 @@ func (s *subscriptionStorage) GetActiveUserSubscriptionsByUserId(ctx context.Con
 		var dateTo time.Time
 		var qty int32
 		var price float32
-		err := rows.Scan(&price, &qty, &dateTo)
+		err := rows.Scan(&qty, &price, &dateTo)
 		if err != nil {
 			return nil, err
 		}

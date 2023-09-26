@@ -2,12 +2,13 @@ package card_data_provider
 
 import (
 	"context"
+	"fmt"
 	pb "stocks_api/app/gen/proto"
 	client "stocks_api/app/pkg/client/postgresql"
 )
 
 const (
-	insertQuery = `INSERT INTO public.card (user_id, name, sku) VALUES ($1, $2, $3)`
+	insertQuery = `INSERT INTO public.card (user_id, name, sku) VALUES 	`
 	selectQuery = `SELECT name, sku FROM public.card WHERE user_id = $1`
 )
 
@@ -19,17 +20,26 @@ func NewCardStorage(client client.PostgreSQLClient) *cardStorage {
 	return &cardStorage{client: client}
 }
 
-func (as *cardStorage) SaveAll(ctx context.Context, userId uint64, cards []*pb.ProductCard) error {
-	for _, card := range cards {
-		name := card.GetName()
-		sku := card.GetSku()
+func (as *cardStorage) SaveAll(ctx context.Context, userId uint64, cards []*pb.ProductCard) (int32, error) {
 
-		_, err := as.client.Query(ctx, insertQuery, userId, name, sku)
-		if err != nil {
-			return err
-		}
+	vals := []interface{}{}
+	n := int32(0)
+	i := 1
+	sql := insertQuery
+	for _, c := range cards {
+
+		sql += fmt.Sprintf("($%d, $%d, $%d),", i, i+1, i+2)
+		i = i + 3
+		vals = append(vals, userId, c.Name, c.Sku)
+		n++
 	}
-	return nil
+	sql = sql[:len(sql)-1]
+
+	if _, err := as.client.Exec(ctx, sql, vals...); err != nil {
+		return n, err
+	}
+	return n, nil
+
 }
 
 func (as *cardStorage) GetAll(ctx context.Context, userId uint64) ([]*pb.ProductCard, error) {

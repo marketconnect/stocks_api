@@ -56,21 +56,25 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 
 	values := md["authorization"]
 	if len(values) == 0 {
+		fmt.Println(0000000)
 		return status.Errorf(codes.Unauthenticated, "authorization token is not provided"+method)
 	}
 
 	accessToken := values[0]
 	userId, err := interceptor.tokenManager.Verify(accessToken)
 	if err != nil {
+		fmt.Println(err)
 		return status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
 	}
 
 	userPermissions, err := interceptor.subscriptionStore.GetActiveUserSubscriptionsByUserId(ctx, *userId)
 	if err != nil {
+		fmt.Println(err)
 		return status.Error(codes.PermissionDenied, "error to  permission to access this RPC: "+err.Error()+method)
 	}
 
 	if len(userPermissions) > 0 {
+		fmt.Println("good")
 		return nil
 	}
 
