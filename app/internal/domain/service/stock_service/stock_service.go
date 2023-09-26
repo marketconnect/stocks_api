@@ -53,7 +53,7 @@ func (service *StockService) GetFromTo(ctx context.Context, req *pb.GetFromToReq
 	stocks, err := service.stockDataProvider.GetFromTo(ctx, skus, from, to)
 	if err != nil {
 		service.logger.Error(err)
-		return &pb.GetFromToResp{}, status.Errorf(codes.Internal, "could not get stocks: %v", err)
+		return &pb.GetFromToResp{}, status.Errorf(codes.Internal, "could`t get stocks: %v", err)
 	}
 	return &pb.GetFromToResp{Stocks: stocks}, nil
 }
