@@ -2,7 +2,6 @@ package card_service
 
 import (
 	"context"
-	"fmt"
 	pb "stocks_api/app/gen/proto"
 	"stocks_api/app/pkg/logger"
 
@@ -21,7 +20,6 @@ type CardService struct {
 }
 
 func NewCardService(cardDataProvider CardDataProvider, logger logger.Logger) *CardService {
-	logger.Info("created card service")
 	return &CardService{
 		cardDataProvider: cardDataProvider,
 		logger:           logger,
@@ -30,7 +28,6 @@ func NewCardService(cardDataProvider CardDataProvider, logger logger.Logger) *Ca
 
 func (service *CardService) AddProductsCards(ctx context.Context, req *pb.AddProductsCardsRequest) (*pb.AddProductsCardsResponse, error) {
 	// Validate input parameters
-	fmt.Printf("and here %d", len(req.GetProductsCards()))
 	if req == nil {
 		return &pb.AddProductsCardsResponse{}, status.Error(codes.InvalidArgument, "request is nil")
 	}
