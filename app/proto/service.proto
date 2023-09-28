@@ -19,9 +19,10 @@ service UserSubscriptionsService {
 
 service ProductCardService {
     rpc AddProductsCards(AddProductsCardsRequest) returns (AddProductsCardsResponse);
+    rpc GetProductsCards(GetProductsCardsRequest) returns (GetProductsCardsResponse);
 }
 
 
 service StockService {
-    rpc GetFromTo(GetFromToReq) returns (GetFromToResp);
+    rpc GetStocksFromTo(GetStocksFromToReq) returns (GetStocksFromToResp);
 }

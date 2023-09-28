@@ -19,7 +19,7 @@ func NewStockStorage(client client.PostgreSQLClient) *stockStorage {
 	return &stockStorage{client: client}
 }
 
-func (as *stockStorage) GetFromTo(ctx context.Context, skus []uint64, dateFrom time.Time, dateTo time.Time) ([]*pb.Stock, error) {
+func (as *stockStorage) GetStocksFromTo(ctx context.Context, skus []uint64, dateFrom time.Time, dateTo time.Time) ([]*pb.Stock, error) {
 	var result []*pb.Stock
 	rows, err := as.client.Query(ctx, selectQuery, skus, dateFrom, dateTo)
 	if err != nil {

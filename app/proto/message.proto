@@ -9,6 +9,7 @@ option go_package = "./proto";
 
 message Empty {}
 
+// Auth
 message AuthRequest {
     string username = 1;
     string password = 2;
@@ -20,6 +21,7 @@ message TokenResponse {
     int64 expiredAt = 3;
 }
 
+// Subscriptions
 message UserSubscriptionsRequest {
     uint64 ID = 1;
 }
@@ -36,22 +38,36 @@ message UserSubscriptionsResponse {
     repeated UserSubscription subscriptions = 1;
 }
 
-message AddProductsCardsRequest {
-    uint64 ID = 1;
-    repeated ProductCard productsCards = 2;
-}
-
-
+// Products Cards
 message ProductCard {
     uint64 sku   = 1;
     string name  = 2;
 }
 
+message AddProductsCardsRequest { //Add
+    uint64 ID = 1;
+    repeated ProductCard productsCards = 2;
+}
+
+
+
 message AddProductsCardsResponse {
     int32 qty = 1;
 }
 
-message GetFromToReq {
+
+message GetProductsCardsRequest { //Get
+    uint64 ID = 1;
+}
+
+message GetProductsCardsResponse {
+    repeated ProductCard productsCards = 1;
+}
+
+
+// Stocks
+
+message GetStocksFromToReq {
     uint64 from          = 1;
     uint64 to            = 2;
     repeated uint64 skus = 3;
@@ -64,7 +80,6 @@ message Stock {
     int64 qty  = 3;
 }
 
-message GetFromToResp {
+message GetStocksFromToResp {
     repeated Stock stocks = 1;
 }
-
