@@ -42,6 +42,7 @@ message UserSubscriptionsResponse {
 message ProductCard {
     uint64 sku   = 1;
     string name  = 2;
+    string image = 3;
 }
 
 message AddProductsCardsRequest { //Add

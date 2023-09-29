@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	insertQuery = `INSERT INTO public.card (user_id, name, sku) VALUES 	`
-	selectQuery = `SELECT name, sku FROM public.card WHERE user_id = $1`
+	insertQuery = `INSERT INTO public.card (user_id, name, sku, image) VALUES 	`
+	selectQuery = `SELECT name, sku, image FROM public.card WHERE user_id = $1`
 )
 
 type cardStorage struct {
@@ -28,9 +28,9 @@ func (as *cardStorage) SaveAll(ctx context.Context, userId uint64, cards []*pb.P
 	sql := insertQuery
 	for _, c := range cards {
 
-		sql += fmt.Sprintf("($%d, $%d, $%d),", i, i+1, i+2)
-		i = i + 3
-		vals = append(vals, userId, c.Name, c.Sku)
+		sql += fmt.Sprintf("($%d, $%d, $%d, $%d),", i, i+1, i+2, i+3)
+		i = i + 4
+		vals = append(vals, userId, c.Name, c.Sku, c.Image)
 		n++
 	}
 	sql = sql[:len(sql)-1]
@@ -55,7 +55,7 @@ func (as *cardStorage) GetAll(ctx context.Context, userId uint64) ([]*pb.Product
 		var card pb.ProductCard
 
 		// Scan the values from the row into the card struct
-		err := rows.Scan(&card.Name, &card.Sku)
+		err := rows.Scan(&card.Name, &card.Sku, &card.Image)
 		if err != nil {
 			// Handle the error here
 			continue
