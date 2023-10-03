@@ -6,6 +6,7 @@ import (
 	"stocks_api/app/pkg/logger"
 
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -14,9 +15,13 @@ type CardDataProvider interface {
 	GetAll(ctx context.Context, userId uint64) ([]*pb.ProductCard, error)
 }
 
+type TokenManager interface {
+	Verify(accessToken string) (*uint64, error)
+}
 type CardService struct {
 	cardDataProvider CardDataProvider
 	logger           logger.Logger
+	tokenManager     TokenManager
 	pb.UnimplementedProductCardServiceServer
 }
 
@@ -32,17 +37,32 @@ func (service *CardService) AddProductsCards(ctx context.Context, req *pb.AddPro
 	if req == nil {
 		return &pb.AddProductsCardsResponse{}, status.Error(codes.InvalidArgument, "request is nil")
 	}
-	if req.GetID() == 0 {
-		return &pb.AddProductsCardsResponse{}, status.Error(codes.InvalidArgument, "user ID is required")
-	}
+
 	if len(req.GetProductsCards()) == 0 {
 		return &pb.AddProductsCardsResponse{}, status.Error(codes.InvalidArgument, "at least one product card is required")
 	}
 
-	userId := req.GetID()
-	productsCards := req.GetProductsCards()
+	// Id extraction
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return &pb.AddProductsCardsResponse{}, status.Errorf(codes.Unauthenticated, "metadata is not provided")
+	}
 
-	qty, err := service.cardDataProvider.SaveAll(ctx, userId, productsCards)
+	values := md["authorization"]
+	if len(values) == 0 {
+		return &pb.AddProductsCardsResponse{}, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
+	}
+
+	accessToken := values[0]
+	userId, err := service.tokenManager.Verify(accessToken)
+	if err != nil {
+
+		return &pb.AddProductsCardsResponse{}, status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
+	}
+
+	productsCards := req.GetProductsCards()
+	// Saving
+	qty, err := service.cardDataProvider.SaveAll(ctx, *userId, productsCards)
 	if err != nil {
 		service.logger.Error(err)
 		return &pb.AddProductsCardsResponse{}, status.Errorf(codes.Internal, "could not	save cards: %v", err)
@@ -56,10 +76,25 @@ func (service *CardService) GetProductsCards(ctx context.Context, req *pb.GetPro
 	if req == nil {
 		return &pb.GetProductsCardsResponse{}, status.Error(codes.InvalidArgument, "request is nil")
 	}
-	if req.GetID() == 0 {
-		return &pb.GetProductsCardsResponse{}, status.Error(codes.InvalidArgument, "user ID is required")
+	// Id extraction
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return &pb.GetProductsCardsResponse{}, status.Errorf(codes.Unauthenticated, "metadata is not provided")
 	}
-	productCards, err := service.cardDataProvider.GetAll(ctx, req.GetID())
+
+	values := md["authorization"]
+	if len(values) == 0 {
+		return &pb.GetProductsCardsResponse{}, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
+	}
+
+	accessToken := values[0]
+	userId, err := service.tokenManager.Verify(accessToken)
+	if err != nil {
+
+		return &pb.GetProductsCardsResponse{}, status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
+	}
+
+	productCards, err := service.cardDataProvider.GetAll(ctx, *userId)
 	if err != nil {
 		service.logger.Error(err)
 		return &pb.GetProductsCardsResponse{}, status.Errorf(codes.Internal, "could not fetch cards: %v", err)

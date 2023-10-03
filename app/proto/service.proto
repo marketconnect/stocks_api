@@ -13,15 +13,10 @@ service AuthService {
     rpc Login(AuthRequest) returns (TokenResponse);
 }
 
-service UserSubscriptionsService {
-    rpc GetSubscriptions(UserSubscriptionsRequest) returns (UserSubscriptionsResponse);
-}
-
 service ProductCardService {
     rpc AddProductsCards(AddProductsCardsRequest) returns (AddProductsCardsResponse);
     rpc GetProductsCards(GetProductsCardsRequest) returns (GetProductsCardsResponse);
 }
-
 
 service StockService {
     rpc GetStocksFromTo(GetStocksFromToReq) returns (GetStocksFromToResp);
