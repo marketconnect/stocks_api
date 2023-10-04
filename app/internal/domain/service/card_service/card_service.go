@@ -25,9 +25,10 @@ type CardService struct {
 	pb.UnimplementedProductCardServiceServer
 }
 
-func NewCardService(cardDataProvider CardDataProvider, logger logger.Logger) *CardService {
+func NewCardService(cardDataProvider CardDataProvider, tokenManager TokenManager, logger logger.Logger) *CardService {
 	return &CardService{
 		cardDataProvider: cardDataProvider,
+		tokenManager:     tokenManager,
 		logger:           logger,
 	}
 }

@@ -56,7 +56,7 @@ func NewApp(config *config.Config, logger logger.Logger) (App, error) {
 	cardDataProvider := card_data_provider.NewCardStorage(pgClient)
 	// Services
 	authService := auth_service.NewAuthService(authDataProvider, jwtManager, tokenDuration, logger)
-	cardsService := card_service.NewCardService(cardDataProvider, logger)
+	cardsService := card_service.NewCardService(cardDataProvider, jwtManager, logger)
 	// subscriptionService := subscription_service.NewSubscriptionService(subscriptionDataProvider, logger)
 	// interceptor := auth_interceptor.NewAuthInterceptor(subscriptionDataProvider, tokenManager)
 
