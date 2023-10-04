@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package main;
 
-import "google/protobuf/timestamp.proto";
-
 
 option go_package = "./proto";
 
@@ -29,8 +27,7 @@ message ProductCard {
 }
 
 message AddProductsCardsRequest { //Add
-    uint64 ID = 1;
-    repeated ProductCard productsCards = 2;
+    repeated ProductCard productsCards = 1;
 }
 
 
@@ -40,9 +37,7 @@ message AddProductsCardsResponse {
 }
 
 
-message GetProductsCardsRequest { //Get
-    uint64 ID = 1;
-}
+message GetProductsCardsRequest {}
 
 message GetProductsCardsResponse {
     repeated ProductCard productsCards = 1;
