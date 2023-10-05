@@ -35,6 +35,8 @@ func (as *cardStorage) SaveAll(ctx context.Context, userId uint64, cards []*pb.P
 	}
 	sql = sql[:len(sql)-1]
 
+	sql += " ON CONFLICT (user_id, sku) DO UPDATE SET sku = EXCLUDED.sku"
+
 	if _, err := as.client.Exec(ctx, sql, vals...); err != nil {
 		return n, err
 	}
