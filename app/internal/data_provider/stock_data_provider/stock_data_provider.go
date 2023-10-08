@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	selectQuery = `SELECT sku, wh, qty FROM public.stock WHERE sku = $1 AND created_at >= $2 AND created_at <= $3`
+	selectQuery = `SELECT sku, wh, qty FROM public.stock WHERE sku = ANY($1) AND created_at >= $2 AND created_at <= $3`
 )
 
 type stockStorage struct {

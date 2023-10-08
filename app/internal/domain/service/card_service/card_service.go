@@ -13,6 +13,7 @@ import (
 type CardDataProvider interface {
 	SaveAll(ctx context.Context, userId uint64, cards []*pb.ProductCard) (int32, error)
 	GetAll(ctx context.Context, userId uint64) ([]*pb.ProductCard, error)
+	Delete(ctx context.Context, userId uint64, sku uint64) error
 }
 
 type TokenManager interface {
@@ -31,6 +32,40 @@ func NewCardService(cardDataProvider CardDataProvider, tokenManager TokenManager
 		tokenManager:     tokenManager,
 		logger:           logger,
 	}
+}
+
+func (service *CardService) DeleteProductCard(ctx context.Context, req *pb.DeleteProductCardRequest) (*pb.DeleteProductCardResponse, error) {
+	// Validate input parameters
+	if req == nil {
+		return &pb.DeleteProductCardResponse{}, status.Error(codes.InvalidArgument, "request is nil")
+	}
+	sku := req.GetSku()
+	if sku == 0 {
+		return &pb.DeleteProductCardResponse{}, status.Error(codes.InvalidArgument, "sku is required")
+	}
+	// Id extraction
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return &pb.DeleteProductCardResponse{}, status.Errorf(codes.Unauthenticated, "metadata is not provided")
+	}
+
+	values := md["authorization"]
+	if len(values) == 0 {
+		return &pb.DeleteProductCardResponse{}, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
+	}
+
+	accessToken := values[0]
+	userId, err := service.tokenManager.Verify(accessToken)
+	if err != nil {
+
+		return &pb.DeleteProductCardResponse{}, status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
+	}
+	err = service.cardDataProvider.Delete(ctx, *userId, sku)
+	if err != nil {
+		service.logger.Error(err)
+		return &pb.DeleteProductCardResponse{}, status.Errorf(codes.Internal, "could not delete card: %v", err)
+	}
+	return &pb.DeleteProductCardResponse{}, nil
 }
 
 func (service *CardService) AddProductsCards(ctx context.Context, req *pb.AddProductsCardsRequest) (*pb.AddProductsCardsResponse, error) {

@@ -10,6 +10,7 @@ import (
 const (
 	insertQuery = `INSERT INTO public.card (user_id, name, sku, image) VALUES 	`
 	selectQuery = `SELECT name, sku, image FROM public.card WHERE user_id = $1`
+	deleteQuery = `DELETE FROM public.card WHERE user_id = $1 AND sku = $2`
 )
 
 type cardStorage struct {
@@ -20,6 +21,10 @@ func NewCardStorage(client client.PostgreSQLClient) *cardStorage {
 	return &cardStorage{client: client}
 }
 
+func (cardStorage *cardStorage) Delete(ctx context.Context, userId uint64, sku uint64) error {
+	_, err := cardStorage.client.Exec(ctx, deleteQuery, userId, sku)
+	return err
+}
 func (as *cardStorage) SaveAll(ctx context.Context, userId uint64, cards []*pb.ProductCard) (int32, error) {
 
 	vals := []interface{}{}

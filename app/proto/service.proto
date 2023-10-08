@@ -16,6 +16,7 @@ service AuthService {
 service ProductCardService {
     rpc AddProductsCards(AddProductsCardsRequest) returns (AddProductsCardsResponse);
     rpc GetProductsCards(GetProductsCardsRequest) returns (GetProductsCardsResponse);
+    rpc DeleteProductCard(DeleteProductCardRequest) returns (DeleteProductCardResponse);
 }
 
 service StockService {

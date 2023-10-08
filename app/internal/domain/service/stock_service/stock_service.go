@@ -21,7 +21,7 @@ type StockService struct {
 	pb.UnimplementedStockServiceServer
 }
 
-func NewCardService(stockDataProvider StockDataProvider, logger logger.Logger) *StockService {
+func NewStockService(stockDataProvider StockDataProvider, logger logger.Logger) *StockService {
 	return &StockService{
 		stockDataProvider: stockDataProvider,
 		logger:            logger,

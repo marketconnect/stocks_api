@@ -56,9 +56,14 @@ message GetStocksFromToReq {
 message Stock {
     uint64 sku = 1;
     uint64 wh  = 2;
-    int64 qty  = 3;
+    int32 qty  = 3;
 }
 
 message GetStocksFromToResp {
     repeated Stock stocks = 1;
 }
+
+message DeleteProductCardRequest {
+    uint64 sku = 1;
+}
+message DeleteProductCardResponse {}
