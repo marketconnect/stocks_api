@@ -47,8 +47,8 @@ message GetProductsCardsResponse {
 // Stocks
 
 message GetStocksFromToReq {
-    uint64 from          = 1;
-    uint64 to            = 2;
+    int64 from          = 1;
+    int64 to            = 2;
     repeated uint64 skus = 3;
 }
 

@@ -46,8 +46,8 @@ func (service *StockService) GetStocksFromTo(ctx context.Context, req *pb.GetSto
 		return &pb.GetStocksFromToResp{}, status.Error(codes.InvalidArgument, "skus is required")
 	}
 
-	from := time.Unix(int64(unixFrom), 0)
-	to := time.Unix(int64(unixTo), 0)
+	from := time.Unix(0, unixFrom*1000000)
+	to := time.Unix(0, unixTo*1000000)
 
 	fmt.Printf("from: %v, to: %v\n", from, to)
 	stocks, err := service.stockDataProvider.GetStocksFromTo(ctx, skus, from, to)
