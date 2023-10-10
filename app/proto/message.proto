@@ -14,9 +14,10 @@ message AuthRequest {
 }
 
 message TokenResponse {
-    string token    = 1;
-    bool freebie    = 2;
-    int64 expiredAt = 3;
+    string token                = 1;
+    bool freebie                = 2;
+    bool timeToUpdateCommission = 3;
+    int64 expiredAt             = 4;
 }
 
 // Products Cards
