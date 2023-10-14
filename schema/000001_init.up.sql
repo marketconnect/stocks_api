@@ -20,8 +20,9 @@ CREATE TABLE public.stock (
     qty integer,
     created_at timestamp with time zone DEFAULT current_timestamp
 );
+-- CREATE USER IF NOT EXISTS mc_service WITH ENCRYPTED PASSWORD
 -- GRANT CONNECT ON DATABASE * TO *;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO *;
-GRANT ALL PRIVILEGES ON TABLE public.mc_users TO *;
-GRANT ALL PRIVILEGES ON TABLE public.card TO *;
-GRANT ALL PRIVILEGES ON TABLE public.stock TO *;
+-- GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.mc_users TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.card TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.stock TO *;
