@@ -686,6 +686,133 @@ func (*DeleteProductCardResponse) Descriptor() ([]byte, []int) {
 	return file_message_proto_rawDescGZIP(), []int{12}
 }
 
+// Commissions
+type GetCommissionReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *GetCommissionReq) Reset() {
+	*x = GetCommissionReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_message_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetCommissionReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCommissionReq) ProtoMessage() {}
+
+func (x *GetCommissionReq) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCommissionReq.ProtoReflect.Descriptor instead.
+func (*GetCommissionReq) Descriptor() ([]byte, []int) {
+	return file_message_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetCommissionReq) GetId() uint64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type GetCommissionResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Commission string `protobuf:"bytes,1,opt,name=commission,proto3" json:"commission,omitempty"`
+	Category   string `protobuf:"bytes,2,opt,name=category,proto3" json:"category,omitempty"`
+	Subject    string `protobuf:"bytes,3,opt,name=subject,proto3" json:"subject,omitempty"`
+	Fbs        string `protobuf:"bytes,4,opt,name=fbs,proto3" json:"fbs,omitempty"`
+	Fbo        string `protobuf:"bytes,5,opt,name=fbo,proto3" json:"fbo,omitempty"`
+}
+
+func (x *GetCommissionResp) Reset() {
+	*x = GetCommissionResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_message_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetCommissionResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCommissionResp) ProtoMessage() {}
+
+func (x *GetCommissionResp) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCommissionResp.ProtoReflect.Descriptor instead.
+func (*GetCommissionResp) Descriptor() ([]byte, []int) {
+	return file_message_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetCommissionResp) GetCommission() string {
+	if x != nil {
+		return x.Commission
+	}
+	return ""
+}
+
+func (x *GetCommissionResp) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *GetCommissionResp) GetSubject() string {
+	if x != nil {
+		return x.Subject
+	}
+	return ""
+}
+
+func (x *GetCommissionResp) GetFbs() string {
+	if x != nil {
+		return x.Fbs
+	}
+	return ""
+}
+
+func (x *GetCommissionResp) GetFbo() string {
+	if x != nil {
+		return x.Fbo
+	}
+	return ""
+}
+
 var File_message_proto protoreflect.FileDescriptor
 
 var file_message_proto_rawDesc = []byte{
@@ -741,8 +868,20 @@ var file_message_proto_rawDesc = []byte{
 	0x63, 0x74, 0x43, 0x61, 0x72, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x10, 0x0a,
 	0x03, 0x73, 0x6b, 0x75, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x03, 0x73, 0x6b, 0x75, 0x22,
 	0x1b, 0x0a, 0x19, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74,
-	0x43, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x09, 0x5a, 0x07,
-	0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x43, 0x61, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x22, 0x0a, 0x10,
+	0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71,
+	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x69, 0x64,
+	0x22, 0x8d, 0x01, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x69, 0x73, 0x73, 0x69,
+	0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x6f, 0x6d, 0x6d, 0x69, 0x73,
+	0x73, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x63, 0x6f, 0x6d, 0x6d,
+	0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x1a, 0x0a, 0x08, 0x63, 0x61, 0x74, 0x65, 0x67, 0x6f,
+	0x72, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x63, 0x61, 0x74, 0x65, 0x67, 0x6f,
+	0x72, 0x79, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x10, 0x0a, 0x03,
+	0x66, 0x62, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x66, 0x62, 0x73, 0x12, 0x10,
+	0x0a, 0x03, 0x66, 0x62, 0x6f, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x66, 0x62, 0x6f,
+	0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -757,7 +896,7 @@ func file_message_proto_rawDescGZIP() []byte {
 	return file_message_proto_rawDescData
 }
 
-var file_message_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_message_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_message_proto_goTypes = []interface{}{
 	(*Empty)(nil),                     // 0: main.Empty
 	(*AuthRequest)(nil),               // 1: main.AuthRequest
@@ -772,6 +911,8 @@ var file_message_proto_goTypes = []interface{}{
 	(*GetStocksFromToResp)(nil),       // 10: main.GetStocksFromToResp
 	(*DeleteProductCardRequest)(nil),  // 11: main.DeleteProductCardRequest
 	(*DeleteProductCardResponse)(nil), // 12: main.DeleteProductCardResponse
+	(*GetCommissionReq)(nil),          // 13: main.GetCommissionReq
+	(*GetCommissionResp)(nil),         // 14: main.GetCommissionResp
 }
 var file_message_proto_depIdxs = []int32{
 	3, // 0: main.AddProductsCardsRequest.productsCards:type_name -> main.ProductCard
@@ -946,6 +1087,30 @@ func file_message_proto_init() {
 				return nil
 			}
 		}
+		file_message_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetCommissionReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_message_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetCommissionResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -953,7 +1118,7 @@ func file_message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_message_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

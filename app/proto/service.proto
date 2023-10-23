@@ -22,3 +22,7 @@ service ProductCardService {
 service StockService {
     rpc GetStocksFromTo(GetStocksFromToReq) returns (GetStocksFromToResp);
 }
+
+service CommissionService {
+    rpc GetCommission(GetCommissionReq) returns (GetCommissionResp);
+}

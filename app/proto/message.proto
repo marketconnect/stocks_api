@@ -68,3 +68,16 @@ message DeleteProductCardRequest {
     uint64 sku = 1;
 }
 message DeleteProductCardResponse {}
+
+// Commissions
+message GetCommissionReq {
+    uint64 id = 1;
+}
+
+message GetCommissionResp {
+    string commission = 1;
+    string category   = 2;
+    string subject    = 3;
+    string fbs        = 4;
+    string fbo        = 5;
+}

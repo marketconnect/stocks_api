@@ -383,3 +383,89 @@ var StockService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "service.proto",
 }
+
+// CommissionServiceClient is the client API for CommissionService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type CommissionServiceClient interface {
+	GetCommission(ctx context.Context, in *GetCommissionReq, opts ...grpc.CallOption) (*GetCommissionResp, error)
+}
+
+type commissionServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewCommissionServiceClient(cc grpc.ClientConnInterface) CommissionServiceClient {
+	return &commissionServiceClient{cc}
+}
+
+func (c *commissionServiceClient) GetCommission(ctx context.Context, in *GetCommissionReq, opts ...grpc.CallOption) (*GetCommissionResp, error) {
+	out := new(GetCommissionResp)
+	err := c.cc.Invoke(ctx, "/main.CommissionService/GetCommission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CommissionServiceServer is the server API for CommissionService service.
+// All implementations must embed UnimplementedCommissionServiceServer
+// for forward compatibility
+type CommissionServiceServer interface {
+	GetCommission(context.Context, *GetCommissionReq) (*GetCommissionResp, error)
+	mustEmbedUnimplementedCommissionServiceServer()
+}
+
+// UnimplementedCommissionServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCommissionServiceServer struct {
+}
+
+func (UnimplementedCommissionServiceServer) GetCommission(context.Context, *GetCommissionReq) (*GetCommissionResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCommission not implemented")
+}
+func (UnimplementedCommissionServiceServer) mustEmbedUnimplementedCommissionServiceServer() {}
+
+// UnsafeCommissionServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CommissionServiceServer will
+// result in compilation errors.
+type UnsafeCommissionServiceServer interface {
+	mustEmbedUnimplementedCommissionServiceServer()
+}
+
+func RegisterCommissionServiceServer(s grpc.ServiceRegistrar, srv CommissionServiceServer) {
+	s.RegisterService(&CommissionService_ServiceDesc, srv)
+}
+
+func _CommissionService_GetCommission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCommissionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommissionServiceServer).GetCommission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/main.CommissionService/GetCommission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommissionServiceServer).GetCommission(ctx, req.(*GetCommissionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CommissionService_ServiceDesc is the grpc.ServiceDesc for CommissionService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var CommissionService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "main.CommissionService",
+	HandlerType: (*CommissionServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetCommission",
+			Handler:    _CommissionService_GetCommission_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "service.proto",
+}
