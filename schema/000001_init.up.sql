@@ -32,5 +32,6 @@ CREATE TABLE public.commission (
 -- GRANT CONNECT ON DATABASE * TO *;
 -- GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.mc_users TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.commission TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.card TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.stock TO *;
