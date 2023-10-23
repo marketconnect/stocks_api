@@ -26,7 +26,7 @@ func NewCommissionService(commissionDataProvider CommissionDataProvider, logger 
 	}
 }
 
-func (service *CommissionService) GetStocksFromTo(ctx context.Context, req *pb.GetCommissionReq) (*pb.GetCommissionResp, error) {
+func (service *CommissionService) GetCommission(ctx context.Context, req *pb.GetCommissionReq) (*pb.GetCommissionResp, error) {
 	// Validate input parameters
 	if req == nil {
 		return &pb.GetCommissionResp{}, status.Error(codes.InvalidArgument, "request is nil")
