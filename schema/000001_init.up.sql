@@ -35,3 +35,4 @@ CREATE TABLE public.commission (
 -- GRANT ALL PRIVILEGES ON TABLE public.commission TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.card TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.stock TO *;
+
