@@ -20,6 +20,14 @@ CREATE TABLE public.stock (
     qty integer,
     created_at timestamp with time zone DEFAULT current_timestamp
 );
+CREATE TABLE public.commission (
+    id SERIAL PRIMARY KEY,
+    category varchar(255),
+    subject varchar(255) NOT NULL DEFAULT '',
+    commission integer NOT NULL DEFAULT 0,
+    fbs integer NOT NULL DEFAULT 0,
+    fbo integer NOT NULL DEFAULT 0
+);
 -- CREATE USER IF NOT EXISTS mc_service WITH ENCRYPTED PASSWORD
 -- GRANT CONNECT ON DATABASE * TO *;
 -- GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO *;
