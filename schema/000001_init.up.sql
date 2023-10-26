@@ -17,7 +17,7 @@ CREATE TABLE public.stock (
     id SERIAL PRIMARY KEY,
     sku integer,
     wh integer,
-    size_option_id integer,
+    size_option_id INTEGER DEFAULT 0 NOT NULL,
     qty integer,
     created_at timestamp with time zone DEFAULT current_timestamp
 );
