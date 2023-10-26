@@ -55,9 +55,10 @@ message GetStocksFromToReq {
 
 
 message Stock {
-    uint64 sku = 1;
-    uint64 wh  = 2;
-    int32 qty  = 3;
+    uint64 sku          = 1;
+    uint64 wh           = 2;
+    uint64 sizeOptionId = 3;
+    int32 qty           = 4;
 }
 
 message GetStocksFromToResp {

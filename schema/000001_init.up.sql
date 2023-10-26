@@ -17,6 +17,7 @@ CREATE TABLE public.stock (
     id SERIAL PRIMARY KEY,
     sku integer,
     wh integer,
+    size_option_id integer,
     qty integer,
     created_at timestamp with time zone DEFAULT current_timestamp
 );
@@ -35,4 +36,3 @@ CREATE TABLE public.commission (
 -- GRANT ALL PRIVILEGES ON TABLE public.commission TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.card TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.stock TO *;
-

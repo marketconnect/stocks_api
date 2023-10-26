@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	selectQuery = `SELECT sku, wh, qty FROM public.stock WHERE sku = ANY($1) AND created_at >= $2 AND created_at <= $3`
+	selectQuery = `SELECT sku, wh, qty, size_option_id FROM public.stock WHERE sku = ANY($1) AND created_at >= $2 AND created_at <= $3`
 )
 
 type stockStorage struct {
@@ -29,7 +29,7 @@ func (as *stockStorage) GetStocksFromTo(ctx context.Context, skus []uint64, date
 	for rows.Next() {
 		var stock pb.Stock
 		// Scan the values from the row into the stock struct
-		err := rows.Scan(&stock.Sku, &stock.Wh, &stock.Qty)
+		err := rows.Scan(&stock.Sku, &stock.Wh, &stock.Qty, &stock.SizeOptionId)
 		if err != nil {
 			return nil, err
 		}
