@@ -28,6 +28,7 @@ func NewOrderService(orderDataProvider OrderDataProvider, logger logger.Logger) 
 }
 
 func (service *OrderService) GetOrdersFromTo(ctx context.Context, req *pb.GetOrdersFromToReq) (*pb.GetOrdersFromToResp, error) {
+
 	// Validate input parameters
 	if req == nil {
 		return &pb.GetOrdersFromToResp{}, status.Error(codes.InvalidArgument, "request is nil")
@@ -52,5 +53,6 @@ func (service *OrderService) GetOrdersFromTo(ctx context.Context, req *pb.GetOrd
 		service.logger.Error(err)
 		return &pb.GetOrdersFromToResp{}, status.Errorf(codes.Internal, "could`t get orders: %v", err)
 	}
+	service.logger.Info(orders)
 	return &pb.GetOrdersFromToResp{Orders: orders}, nil
 }
