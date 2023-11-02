@@ -29,6 +29,12 @@ CREATE TABLE public.commission (
     fbs integer NOT NULL DEFAULT 0,
     fbo integer NOT NULL DEFAULT 0
 );
+CREATE TABLE public.mc_order (
+    id SERIAL PRIMARY KEY,
+    sku integer,
+    qty integer,
+    created_at timestamp with time zone DEFAULT current_timestamp
+);
 -- CREATE USER IF NOT EXISTS mc_service WITH ENCRYPTED PASSWORD
 -- GRANT CONNECT ON DATABASE * TO *;
 -- GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO *;
@@ -36,3 +42,4 @@ CREATE TABLE public.commission (
 -- GRANT ALL PRIVILEGES ON TABLE public.commission TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.card TO *;
 -- GRANT ALL PRIVILEGES ON TABLE public.stock TO *;
+-- GRANT ALL PRIVILEGES ON TABLE public.mc_order TO *;
