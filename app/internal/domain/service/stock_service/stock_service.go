@@ -2,7 +2,7 @@ package stock_service
 
 import (
 	"context"
-	"fmt"
+
 	pb "stocks_api/app/gen/proto"
 	"stocks_api/app/pkg/logger"
 	"time"
@@ -49,7 +49,6 @@ func (service *StockService) GetStocksFromTo(ctx context.Context, req *pb.GetSto
 	from := time.Unix(0, unixFrom*1000000)
 	to := time.Unix(0, unixTo*1000000)
 
-	fmt.Printf("from: %v, to: %v\n", from, to)
 	stocks, err := service.stockDataProvider.GetStocksFromTo(ctx, skus, from, to)
 	if err != nil {
 		service.logger.Error(err)

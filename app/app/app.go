@@ -8,11 +8,13 @@ import (
 	"stocks_api/app/internal/data_provider/auth_data_provider"
 	"stocks_api/app/internal/data_provider/card_data_provider"
 	"stocks_api/app/internal/data_provider/commission_data_provider"
+	"stocks_api/app/internal/data_provider/order_data_provider"
 	"stocks_api/app/internal/data_provider/stock_data_provider"
 
 	"stocks_api/app/internal/domain/service/auth_service"
 	"stocks_api/app/internal/domain/service/card_service"
 	"stocks_api/app/internal/domain/service/commission_service"
+	"stocks_api/app/internal/domain/service/order_service"
 	"stocks_api/app/internal/domain/service/stock_service"
 
 	"stocks_api/app/pkg/client/postgresql"
@@ -59,12 +61,14 @@ func NewApp(config *config.Config, logger logger.Logger) (App, error) {
 	stocksDataProvider := stock_data_provider.NewStockStorage(pgClient)
 	cardDataProvider := card_data_provider.NewCardStorage(pgClient)
 	commissionDataProvider := commission_data_provider.NewCommissionStorage(pgClient)
+	orderDataProvider := order_data_provider.NewOrderStorage(pgClient)
 
 	// Services
 	authService := auth_service.NewAuthService(authDataProvider, jwtManager, tokenDuration, logger)
 	cardsService := card_service.NewCardService(cardDataProvider, jwtManager, logger)
 	commissionService := commission_service.NewCommissionService(commissionDataProvider, logger)
 	stockService := stock_service.NewStockService(stocksDataProvider, logger)
+	orderService := order_service.NewOrderService(orderDataProvider, logger)
 	// interceptor := auth_interceptor.NewAuthInterceptor(subscriptionDataProvider, tokenManager)
 
 	// grpcServer := grpc.NewServer(grpc.UnaryInterceptor(interceptor.Unary()))
@@ -73,7 +77,7 @@ func NewApp(config *config.Config, logger logger.Logger) (App, error) {
 	pb.RegisterStockServiceServer(grpcServer, stockService)
 	pb.RegisterProductCardServiceServer(grpcServer, cardsService)
 	pb.RegisterCommissionServiceServer(grpcServer, commissionService)
-
+	pb.RegisterOrderServiceServer(grpcServer, orderService)
 	return App{
 		cfg:        config,
 		logger:     logger,

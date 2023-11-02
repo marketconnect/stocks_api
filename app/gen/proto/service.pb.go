@@ -59,8 +59,14 @@ var file_service_proto_rawDesc = []byte{
 	0x6f, 0x6d, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x16, 0x2e, 0x6d, 0x61, 0x69, 0x6e,
 	0x2e, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65,
 	0x71, 0x1a, 0x17, 0x2e, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6d, 0x6d,
-	0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x32, 0x56, 0x0a, 0x0c, 0x4f, 0x72,
+	0x64, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x46, 0x0a, 0x0f, 0x47, 0x65,
+	0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x73, 0x46, 0x72, 0x6f, 0x6d, 0x54, 0x6f, 0x12, 0x18, 0x2e,
+	0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x73, 0x46, 0x72,
+	0x6f, 0x6d, 0x54, 0x6f, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x47,
+	0x65, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x73, 0x46, 0x72, 0x6f, 0x6d, 0x54, 0x6f, 0x52, 0x65,
+	0x73, 0x70, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var file_service_proto_goTypes = []interface{}{
@@ -70,12 +76,14 @@ var file_service_proto_goTypes = []interface{}{
 	(*DeleteProductCardRequest)(nil),  // 3: main.DeleteProductCardRequest
 	(*GetStocksFromToReq)(nil),        // 4: main.GetStocksFromToReq
 	(*GetCommissionReq)(nil),          // 5: main.GetCommissionReq
-	(*TokenResponse)(nil),             // 6: main.TokenResponse
-	(*AddProductsCardsResponse)(nil),  // 7: main.AddProductsCardsResponse
-	(*GetProductsCardsResponse)(nil),  // 8: main.GetProductsCardsResponse
-	(*DeleteProductCardResponse)(nil), // 9: main.DeleteProductCardResponse
-	(*GetStocksFromToResp)(nil),       // 10: main.GetStocksFromToResp
-	(*GetCommissionResp)(nil),         // 11: main.GetCommissionResp
+	(*GetOrdersFromToReq)(nil),        // 6: main.GetOrdersFromToReq
+	(*TokenResponse)(nil),             // 7: main.TokenResponse
+	(*AddProductsCardsResponse)(nil),  // 8: main.AddProductsCardsResponse
+	(*GetProductsCardsResponse)(nil),  // 9: main.GetProductsCardsResponse
+	(*DeleteProductCardResponse)(nil), // 10: main.DeleteProductCardResponse
+	(*GetStocksFromToResp)(nil),       // 11: main.GetStocksFromToResp
+	(*GetCommissionResp)(nil),         // 12: main.GetCommissionResp
+	(*GetOrdersFromToResp)(nil),       // 13: main.GetOrdersFromToResp
 }
 var file_service_proto_depIdxs = []int32{
 	0,  // 0: main.AuthService.Register:input_type -> main.AuthRequest
@@ -85,15 +93,17 @@ var file_service_proto_depIdxs = []int32{
 	3,  // 4: main.ProductCardService.DeleteProductCard:input_type -> main.DeleteProductCardRequest
 	4,  // 5: main.StockService.GetStocksFromTo:input_type -> main.GetStocksFromToReq
 	5,  // 6: main.CommissionService.GetCommission:input_type -> main.GetCommissionReq
-	6,  // 7: main.AuthService.Register:output_type -> main.TokenResponse
-	6,  // 8: main.AuthService.Login:output_type -> main.TokenResponse
-	7,  // 9: main.ProductCardService.AddProductsCards:output_type -> main.AddProductsCardsResponse
-	8,  // 10: main.ProductCardService.GetProductsCards:output_type -> main.GetProductsCardsResponse
-	9,  // 11: main.ProductCardService.DeleteProductCard:output_type -> main.DeleteProductCardResponse
-	10, // 12: main.StockService.GetStocksFromTo:output_type -> main.GetStocksFromToResp
-	11, // 13: main.CommissionService.GetCommission:output_type -> main.GetCommissionResp
-	7,  // [7:14] is the sub-list for method output_type
-	0,  // [0:7] is the sub-list for method input_type
+	6,  // 7: main.OrderService.GetOrdersFromTo:input_type -> main.GetOrdersFromToReq
+	7,  // 8: main.AuthService.Register:output_type -> main.TokenResponse
+	7,  // 9: main.AuthService.Login:output_type -> main.TokenResponse
+	8,  // 10: main.ProductCardService.AddProductsCards:output_type -> main.AddProductsCardsResponse
+	9,  // 11: main.ProductCardService.GetProductsCards:output_type -> main.GetProductsCardsResponse
+	10, // 12: main.ProductCardService.DeleteProductCard:output_type -> main.DeleteProductCardResponse
+	11, // 13: main.StockService.GetStocksFromTo:output_type -> main.GetStocksFromToResp
+	12, // 14: main.CommissionService.GetCommission:output_type -> main.GetCommissionResp
+	13, // 15: main.OrderService.GetOrdersFromTo:output_type -> main.GetOrdersFromToResp
+	8,  // [8:16] is the sub-list for method output_type
+	0,  // [0:8] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -113,7 +123,7 @@ func file_service_proto_init() {
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 0,
-			NumServices:   4,
+			NumServices:   5,
 		},
 		GoTypes:           file_service_proto_goTypes,
 		DependencyIndexes: file_service_proto_depIdxs,

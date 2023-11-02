@@ -26,3 +26,7 @@ service StockService {
 service CommissionService {
     rpc GetCommission(GetCommissionReq) returns (GetCommissionResp);
 }
+
+service OrderService {
+    rpc GetOrdersFromTo(GetOrdersFromToReq) returns (GetOrdersFromToResp);
+}
